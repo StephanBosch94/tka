@@ -1,0 +1,9 @@
+.tmp/
+.DS_Store
+*.log
+.vscode/
+.idea/
+node_modules/
+.env
+.env.*
+*.mov

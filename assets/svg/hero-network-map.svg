@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 50 280 240" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="heroMapTitle">
+  <title id="heroMapTitle">TKA logistics network in Europe</title>
+  <style>
+    .hero-network-lines path { fill: none; stroke: rgba(255, 255, 255, 0.32); stroke-width: 1; stroke-linecap: round; stroke-dasharray: 5 5; animation: heroRouteDash 20s linear infinite; }
+    .hero-network-lines .hero-line-main { stroke: #e48736; stroke-width: 1.35; stroke-dasharray: 7 5; opacity: 0.95; }
+    @keyframes heroRouteDash { to { stroke-dashoffset: -80; } }
+    .hero-net-dot { fill: #fff; stroke: #18254b; stroke-width: 1.25; }
+    .hero-net-dot--hub { fill: #e48736; stroke: #fff; stroke-width: 2; filter: drop-shadow(0 0 7px rgba(228, 135, 54, 0.7)); }
+    .hero-net-label { font-family: system-ui, -apple-system, Segoe UI, sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; fill: #fff; }
+    .hero-route-truck { filter: url(#truck-shadow); pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-network-lines path { animation: none; }
+      .hero-network-trucks { display: none; }
+    }
+  </style>
+  <defs>
+    <filter id="truck-shadow" x="-80%" y="-80%" width="260%" height="260%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.8" flood-color="#000" flood-opacity="0.55"/>
+    </filter>
+    <g id="truck-semi">
+      <rect x="-22" y="-5.5" width="30" height="11" rx="1.2" fill="#f4f6fa" stroke="#18254b" stroke-width="0.85"/>
+      <line x1="-16" y1="-5.5" x2="-16" y2="5.5" stroke="#18254b" stroke-width="0.4" opacity="0.2"/>
+      <line x1="-6" y1="-5.5" x2="-6" y2="5.5" stroke="#18254b" stroke-width="0.4" opacity="0.2"/>
+      <path d="M8,-6.5 L19,-4.5 L19,4.5 L8,6.5 L6,5 V-5 Z" fill="#e48736" stroke="#18254b" stroke-width="0.85" stroke-linejoin="round"/>
+      <path d="M9.5,-4.5 L16.5,-3.2 L16.5,3.2 L9.5,4.5 L8.5,3.8 V-3.8 Z" fill="rgba(255,255,255,0.55)"/>
+      <circle cx="-14" cy="-7" r="2.1" fill="#1c1c1c"/><circle cx="-14" cy="-7" r="0.9" fill="#666"/>
+      <circle cx="-14" cy="7" r="2.1" fill="#1c1c1c"/><circle cx="-14" cy="7" r="0.9" fill="#666"/>
+      <circle cx="2" cy="-7" r="2.1" fill="#1c1c1c"/><circle cx="2" cy="-7" r="0.9" fill="#666"/>
+      <circle cx="2" cy="7" r="2.1" fill="#1c1c1c"/><circle cx="2" cy="7" r="0.9" fill="#666"/>
+      <circle cx="14" cy="-7" r="2.1" fill="#1c1c1c"/><circle cx="14" cy="-7" r="0.9" fill="#666"/>
+      <circle cx="14" cy="7" r="2.1" fill="#1c1c1c"/><circle cx="14" cy="7" r="0.9" fill="#666"/>
+    </g>
+  </defs>
+
+  <g class="hero-network-lines">
+    <path id="net-de-rs" class="hero-line-main" d="M 298 205 Q 263 158 228 112"/>
+    <path id="net-de-uk" d="M 228 112 L 95 78"/>
+    <path id="net-de-fr" d="M 228 112 L 138 128"/>
+    <path id="net-fr-uk" d="M 138 128 L 95 78"/>
+    <path id="net-de-es" d="M 228 112 Q 150 190 78 255"/>
+    <path id="net-de-it" d="M 228 112 Q 200 210 175 268"/>
+    <path id="net-es-it" d="M 78 255 L 175 268"/>
+    <path id="net-de-pl" d="M 228 112 L 272 92"/>
+    <path id="net-de-cz" d="M 228 112 L 252 122"/>
+    <path id="net-cz-sk" d="M 252 122 L 262 152"/>
+    <path id="net-cz-pl" d="M 252 122 L 272 92"/>
+    <path id="net-de-au" d="M 228 112 L 242 162"/>
+    <path id="net-rs-hu" d="M 298 205 L 290 178"/>
+    <path id="net-rs-hr" d="M 298 205 L 262 228"/>
+    <path id="net-rs-au" d="M 298 205 Q 275 188 242 162"/>
+  </g>
+
+  <g class="hero-network-dots">
+    <g transform="translate(95,78)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">UK</text>
+    </g>
+    <g transform="translate(138,128)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">FR</text>
+    </g>
+    <g transform="translate(78,255)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">ES</text>
+    </g>
+    <g transform="translate(175,268)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">IT</text>
+    </g>
+    <g transform="translate(272,92)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">PL</text>
+    </g>
+    <g transform="translate(252,122)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">CZ</text>
+    </g>
+    <g transform="translate(262,152)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">SK</text>
+    </g>
+    <g transform="translate(242,162)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">AU</text>
+    </g>
+    <g transform="translate(290,178)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">HU</text>
+    </g>
+    <g transform="translate(262,228)">
+      <circle class="hero-net-dot" r="4.5"/>
+      <text class="hero-net-label" y="16" text-anchor="middle">HR</text>
+    </g>
+    <g transform="translate(228,112)">
+      <circle class="hero-net-dot hero-net-dot--hub" r="7"/>
+      <text class="hero-net-label" y="20" text-anchor="middle">DE</text>
+    </g>
+    <g transform="translate(298,205)">
+      <circle class="hero-net-dot hero-net-dot--hub" r="8"/>
+      <text class="hero-net-label" y="21" text-anchor="middle">TKA</text>
+    </g>
+  </g>
+
+  <g class="hero-network-trucks">
+    <g class="hero-route-truck">
+      <g transform="scale(0.8)"><use href="#truck-semi"/></g>
+      <animateMotion dur="9s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#net-de-rs"/>
+      </animateMotion>
+    </g>
+    <g class="hero-route-truck">
+      <g transform="scale(0.8)"><use href="#truck-semi"/></g>
+      <animateMotion dur="7s" repeatCount="indefinite" rotate="auto" begin="1.5s">
+        <mpath href="#net-de-cz"/>
+      </animateMotion>
+    </g>
+    <g class="hero-route-truck">
+      <g transform="scale(0.8)"><use href="#truck-semi"/></g>
+      <animateMotion dur="6s" repeatCount="indefinite" rotate="auto" begin="2.5s">
+        <mpath href="#net-rs-hu"/>
+      </animateMotion>
+    </g>
+    <g class="hero-route-truck">
+      <g transform="scale(0.8)"><use href="#truck-semi"/></g>
+      <animateMotion dur="7.5s" repeatCount="indefinite" rotate="auto" begin="1s">
+        <mpath href="#net-rs-au"/>
+      </animateMotion>
+    </g>
+    <g class="hero-route-truck">
+      <g transform="scale(0.8)"><use href="#truck-semi"/></g>
+      <animateMotion dur="8.5s" repeatCount="indefinite" rotate="auto" begin="2s">
+        <mpath href="#net-de-es"/>
+      </animateMotion>
+    </g>
+    <g class="hero-route-truck">
+      <g transform="scale(0.8)"><use href="#truck-semi"/></g>
+      <animateMotion dur="6.5s" repeatCount="indefinite" rotate="auto" begin="1.2s">
+        <mpath href="#net-de-fr"/>
+      </animateMotion>
+    </g>
+  </g>
+</svg>

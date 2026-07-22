@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TKA Logistics – Globalna mreža, domaći partner. Međunarodni i domaći transport, skladištenje i carinjenje u centralnoj Srbiji.">
+  <title>TKA – Globalna Mreža, Domaći Partner</title>
+  <link rel="icon" href="assets/images/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="alternate" hreflang="sr" href="/">
+  <link rel="alternate" hreflang="en" href="en/">
+  <link rel="alternate" hreflang="hr" href="hr/">
+</head>
+<body>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a href="/" class="logo" aria-label="TKA Logistics – početna">
+        <img src="assets/images/logo-tka.png" alt="TKA Logistics" width="173" height="75" class="logo-img">
+      </a>
+
+      <nav class="nav-main" aria-label="Glavna navigacija">
+        <ul class="nav-list">
+          <li><a href="/">Home</a></li>
+          <li class="nav-has-dropdown">
+            <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-controls="nav-usluge">
+              Usluge
+              <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+            <ul class="nav-dropdown" id="nav-usluge">
+              <li><a href="/medjunarodni-drumski-transport/">Medjunarodni drumski transport</a></li>
+              <li><a href="/domaci-transport-i-distribucija/">Domaći transport i distribucija</a></li>
+              <li><a href="/intermodalni-transport/">Intermodalni transport</a></li>
+              <li><a href="/skladistenje-i-carinsko-zastupanje/">Skladištenje i carinsko zastupanje</a></li>
+              <li><a href="/avio-brodski-i-zeleznicki-transport/">Avio, brodski i železnički transport</a></li>
+            </ul>
+          </li>
+          <li><a href="/o-nama/">O nama</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/kontakt/">Kontakt</a></li>
+          <li class="lang-switch" aria-label="Jezik">
+            <a href="en/" class="lang-switch__btn" hreflang="en" lang="en" title="English">
+              <img src="assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag">
+              <span>EN</span>
+            </a>
+            <a href="hr/" class="lang-switch__btn" hreflang="hr" lang="hr" title="Hrvatski">
+              <img src="assets/flags/hr.svg" alt="" width="20" height="14" class="lang-flag">
+              <span>HR</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <a href="#upit" class="btn btn-primary header-cta">Pošalji upit</a>
+
+      <button type="button" class="nav-toggle" aria-label="Otvori meni" aria-expanded="false" aria-controls="mobile-nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile-nav" id="mobile-nav" hidden>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/medjunarodni-drumski-transport/">Usluge</a></li>
+        <li><a href="/o-nama/">O nama</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/kontakt/">Kontakt</a></li>
+        <li><a href="en/" class="lang-switch__btn lang-switch__btn--mobile" hreflang="en"><img src="assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag"> English</a></li>
+        <li><a href="hr/" class="lang-switch__btn lang-switch__btn--mobile" hreflang="hr"><img src="assets/flags/hr.svg" alt="" width="20" height="14" class="lang-flag"> Hrvatski</a></li>
+        <li><a href="#upit" class="btn btn-primary">Pošalji upit</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="home" aria-label="Uvod">
+      <div class="container hero-shell">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <span class="pill-badge">Logistika &amp; transport</span>
+            <div class="hero-copy-track">
+              <article class="hero-copy-slide is-active" data-slide="0">
+                <h1 class="hero-title">Globalna mreža,<br>domaći partner</h1>
+                <p class="hero-lead">Potreban vam je transport? Povezujemo Zapadni Balkan sa Evropom kroz Paneco, ELVIS i IFA mreže.</p>
+                <div class="hero-actions">
+                  <a href="#upit" class="btn btn-primary btn-lg hero-cta-primary">Pošaljite upit</a>
+                  <a href="/o-nama/" class="btn btn-secondary btn-lg hero-cta-secondary">Saznajte više</a>
+                </div>
+              </article>
+              <article class="hero-copy-slide" data-slide="1">
+                <h2 class="hero-title">Zbirni transport u Srbiji<br><span class="hero-title-accent">i distribucija</span></h2>
+                <p class="hero-lead">Potreban vam je zbirni transport u Srbiji i distribucija? Centralna lokacija u Krnjevu za brzu distribuciju.</p>
+                <div class="hero-actions">
+                  <a href="/zbirni-transport-u-srbiji-i-distribucija/" class="btn btn-primary btn-lg hero-cta-primary">Pročitajte više</a>
+                  <a href="#upit" class="btn btn-secondary btn-lg hero-cta-secondary">Pošaljite upit</a>
+                </div>
+              </article>
+              <article class="hero-copy-slide" data-slide="2">
+                <h2 class="hero-title">Međunarodni zbirni transport</h2>
+                <p class="hero-lead">Potreban vam je međunarodni zbirni transport? LTL, PTL i FTL širom Evrope, uključujući ADR i hladni lanac.</p>
+                <div class="hero-actions">
+                  <a href="/medjunarodni-zbirni-transport/" class="btn btn-primary btn-lg hero-cta-primary">Pročitajte više</a>
+                  <a href="#upit" class="btn btn-secondary btn-lg hero-cta-secondary">Pošaljite upit</a>
+                </div>
+              </article>
+            </div>
+            <div class="hero-controls">
+              <button type="button" class="hero-ctrl-btn" data-dir="prev" aria-label="Prethodni slajd">
+                <svg viewBox="0 0 12 24" aria-hidden="true"><path d="M10 2 2 12l8 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+              <div class="hero-dots" role="tablist" aria-label="Hero slajdovi">
+                <button type="button" role="tab" aria-selected="true" aria-label="Slajd 1" data-goto="0"></button>
+                <button type="button" role="tab" aria-selected="false" aria-label="Slajd 2" data-goto="1"></button>
+                <button type="button" role="tab" aria-selected="false" aria-label="Slajd 3" data-goto="2"></button>
+              </div>
+              <button type="button" class="hero-ctrl-btn" data-dir="next" aria-label="Sledeći slajd">
+                <svg viewBox="0 0 12 24" aria-hidden="true"><path d="M2 2l8 10-8 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="hero-metrics" aria-label="Ključne brojke">
+          <div class="metric-card">
+            <span class="metric-value">20+</span>
+            <span class="metric-label">godina iskustva</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-value">250+</span>
+            <span class="metric-label">ELVIS partnera</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-value">30+</span>
+            <span class="metric-label">zemalja u Paneco mreži</span>
+          </div>
+          <div class="metric-card metric-card--accent">
+            <span class="metric-value">4–7</span>
+            <span class="metric-label">radnih dana tranzit DE → RS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="partners-strip reveal" aria-label="Partnerske alijanse">
+      <div class="container partners-strip-inner">
+        <a href="https://www.paneco.net/" target="_blank" rel="noopener noreferrer"><img src="assets/partners/paneco.png" alt="Paneco" width="160" height="48" loading="lazy"></a>
+        <a href="https://www.elvis-logistics.com/" target="_blank" rel="noopener noreferrer"><img src="assets/partners/elvis.png" alt="E.L.V.I.S." width="140" height="48" loading="lazy"></a>
+        <a href="https://www.ifa-forwarding.com/" target="_blank" rel="noopener noreferrer"><img src="assets/partners/ifa.png" alt="IFA" width="200" height="48" loading="lazy"></a>
+      </div>
+    </section>
+
+    <!-- O nama -->
+    <section class="section about reveal" id="o-nama">
+      <div class="container about-grid">
+        <div class="about-content">
+          <span class="eyebrow">O nama</span>
+          <h2 class="section-title">Vaš pouzdani logistički partner</h2>
+          <p class="lead">TKA Logistics je moderna logistička kompanija locirana u centralnoj Srbiji sa preko <span class="count-up">20</span> godina iskustva u povezivanju Zapadnog Balkana sa ostatkom sveta. Ponosni smo članovi prestižnih alijansi E.L.V.I.S., Paneco i IFA, što nam omogućava pružanje vrhunskih logističkih usluga koristeći globalnu mrežu partnera.</p>
+          <div class="about-stats">
+            <div class="about-stat"><strong>20+</strong><span>godina iskustva</span></div>
+            <div class="about-stat"><strong>30+</strong><span>zemalja u mreži</span></div>
+            <div class="about-stat"><strong>250+</strong><span>ELVIS partnera</span></div>
+          </div>
+          <a href="/o-nama/" class="btn btn-secondary">Saznajte više</a>
+        </div>
+        <div class="about-visual">
+          <img src="assets/images/about-warehouse.jpg" alt="TKA radnik na viljuškaru u skladištu" width="1024" height="683" loading="lazy" class="about-photo">
+        </div>
+      </div>
+    </section>
+
+    <!-- Usluge -->
+    <section class="section services reveal" id="usluge">
+      <div class="container">
+        <header class="section-header section-header--row">
+          <div>
+            <span class="eyebrow">Naše usluge</span>
+            <h2 class="section-title">Kompletna logistička podrška</h2>
+          </div>
+          <p class="section-desc">Od međunarodnog transporta do skladištenja i carinjenja — rešenja prilagođena vašem poslovanju.</p>
+        </header>
+
+        <svg width="0" height="0" aria-hidden="true" focusable="false" class="svg-defs">
+          <defs>
+            <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#18254b"/>
+              <stop offset="100%" stop-color="#e48736"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div class="services-grid-wide">
+          <article class="service-card" id="usluge-medjunarodni">
+            <span class="service-num">01</span>
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <rect class="icon-primary" x="4" y="20" width="28" height="16" rx="2" stroke-width="2"/>
+                <path class="icon-primary" d="M32 24h8l4 8v4H32V24z" stroke-width="2"/>
+                <circle class="icon-accent" cx="14" cy="38" r="4" stroke-width="2"/>
+                <circle class="icon-accent" cx="38" cy="38" r="4" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3>Međunarodni drumski transport</h3>
+            <p>Članstvom u Paneco, ELVIS i IFA alijansama, kao i saradnjom sa velikim brojem renomiranih transportnih kompanija širom Evrope u mogućnosti smo da ponudimo usluge zbirnog transporta (LTL), parcijalnog transporta (PTL) i punih utovara (FTL) uključujići ADR i pošiljke pod temperaturnim režimom.</p>
+            <a href="/medjunarodni-drumski-transport/" class="service-link">Saznajte više →</a>
+          </article>
+
+          <article class="service-card" id="usluge-domaci">
+            <span class="service-num">02</span>
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <path class="icon-primary" d="M8 36V16l16-8 16 8v20" stroke-width="2"/>
+                <path class="icon-primary" d="M16 36V24h16v12" stroke-width="2"/>
+                <circle class="icon-accent-filled" cx="24" cy="14" r="3"/>
+              </svg>
+            </div>
+            <h3>Domaći transport i distribucija</h3>
+            <p>Naša lokacija u Krnjevu kod Velike Plane, u samom centru Srbije, pruža izuzetnu prednost za domaći transport i distribuciju robe. Ova centralna pozicija omogućava brz i efikasan pristup svim delovima Srbije, smanjujući vreme transporta i optimizujući troškove.</p>
+            <a href="/domaci-transport-i-distribucija/" class="service-link">Saznajte više →</a>
+          </article>
+
+          <article class="service-card" id="usluge-intermodalni">
+            <span class="service-num">03</span>
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <rect class="icon-primary" x="6" y="14" width="36" height="20" rx="2" stroke-width="2"/>
+                <path class="icon-primary" d="M6 22h36" stroke-width="2"/>
+                <path class="icon-accent" d="M18 14V8M30 14V8" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Intermodalni transport</h3>
+            <p>TKA takođe pruža efikasne usluge intermodalnog transporta, osiguravajući brz, siguran i ekonomski isplativ transport robe. Sa našim partnerima i modernim alatima za praćenje, možemo garantovati da vaše pošiljke stignu na odredište bezbedno i na vreme.</p>
+            <a href="/intermodalni-transport/" class="service-link">Saznajte više →</a>
+          </article>
+
+          <article class="service-card" id="usluge-skladistenje">
+            <span class="service-num">04</span>
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <path class="icon-primary" d="M6 20L24 8l18 12v20H6V20z" stroke-width="2" stroke-linejoin="round"/>
+                <rect class="icon-accent" x="16" y="26" width="16" height="14" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3>Skladištenje i carinsko zastupanje</h3>
+            <p>TKA pruža vrhunske usluge skladištenja i manipulacije robe, osiguravajući sigurnost i dostupnost vaših proizvoda u svakom trenutku. Naša ponuda obuhvata sabirno i javno carinsko skladište, podržana stručnim timom ovlašćenih carinskih zastupnika koji čine vaše poslovanje lakšim i efikasnijim. Osim osnovnih usluga carinjenja, nudimo i širok spektar dodatnih usluga, poput konsultacija u spoljnotrgovinskom poslovanju i izrade potrebnih sertifikata, pružajući kompletnu podršku vašem logističkom procesu.</p>
+            <a href="/skladistenje-i-carinsko-zastupanje/" class="service-link">Saznajte više →</a>
+          </article>
+
+          <article class="service-card" id="usluge-avio">
+            <span class="service-num">05</span>
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none">
+                <path class="icon-gradient" d="M8 28l12-4 8-10 4 10 12 4-16 6-4 12-4-12-16-6z" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Avio, brodski i železnički transport</h3>
+            <p>TKA nudi širok spektar usluga u avio, brodskom i železničkom transportu, pružajući pouzdanost, konkurentne cene i efikasnost. Naš iskusan tim osigurava sigurnu dostavu vaših pošiljki na vreme, koristeći moderne alate za praćenje i pružajući sveobuhvatnu podršku tokom transportnog procesa. Kontaktirajte nas danas i otkrijte kako TKA može unaprediti vašu logistiku!</p>
+            <a href="/avio-brodski-i-zeleznicki-transport/" class="service-link">Saznajte više →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mreža -->
+    <section class="section network reveal" id="mreza">
+      <div class="container">
+        <header class="section-header section-header--light">
+          <span class="eyebrow eyebrow--light">Naša mreža</span>
+          <h2 class="section-title">Globalni partneri, lokalna ekspertiza</h2>
+        </header>
+
+        <div class="network-panels">
+          <article class="network-panel" id="panel-paneco">
+            <a href="https://www.paneco.net/" target="_blank" rel="noopener noreferrer" class="network-panel-logo">
+              <img src="assets/partners/paneco.png" alt="Paneco" width="160" height="48" loading="lazy">
+            </a>
+            <div class="network-panel-body">
+              <p>Kao suvlasnici i ekskluzivni partner za Zapadni Balkan, pristupamo panevropskoj mreži koja povezuje članove iz skoro svih evropskih zemalja. Integrisana IT platforma omogućava praćenje pošiljki u realnom vremenu, a mreža od preko <span class="count-up">30</span> zemalja i više od <span class="count-up">20</span> partnera osigurava brzu i pouzdanu dostavu širom Evrope.</p>
+            </div>
+          </article>
+          <article class="network-panel" id="panel-elvis">
+            <a href="https://www.elvis-logistics.com/" target="_blank" rel="noopener noreferrer" class="network-panel-logo">
+              <img src="assets/partners/elvis.png" alt="E.L.V.I.S." width="140" height="48" loading="lazy">
+            </a>
+            <div class="network-panel-body">
+              <p>Sa više od <span class="count-up">250</span> partnera, preko <span class="count-up">280</span> lokacija, <span class="count-up">19,000</span> transportnih jedinica i <span class="count-up">3</span> miliona m² skladišnog prostora, E.L.V.I.S. pokriva Zapadnu i Centralnu Evropu. Naša zbirna linija Nemačka – Srbija radi od 2020. godine, sa prosečnim tranzitom od <span class="count-up">4-7</span> radnih dana do carinskog magacina u Dobanovcima.</p>
+            </div>
+          </article>
+          <article class="network-panel" id="panel-ifa">
+            <a href="https://www.ifa-forwarding.com/" target="_blank" rel="noopener noreferrer" class="network-panel-logo">
+              <img src="assets/partners/ifa.png" alt="IFA International Forwarding Association" width="200" height="48" loading="lazy">
+            </a>
+            <div class="network-panel-body">
+              <p>Kroz globalnu mrežu logističkih partnera, IFA omogućava pouzdane međunarodne špediterske usluge. Članstvo donosi pristup savremenim tehnologijama, industrijskim praksama i saradnju sa vodećim logističkim kompanijama širom Evrope — podrška za složene međunarodne pošiljke.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reference -->
+    <section class="section references reveal" id="reference">
+      <div class="container references-layout">
+        <div class="references-main">
+          <h2 class="section-title">O kvalitetu naših usluga svedoče i brojne reference iz različitih branši, kao što su:</h2>
+          <ul class="industry-grid">
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <circle class="icon-primary" cx="24" cy="24" r="7" stroke-width="2"/>
+                  <path class="icon-primary" d="M24 11v3M24 34v3M11 24h3M34 24h3M14.2 14.2l2.1 2.1M31.7 31.7l2.1 2.1M33.8 14.2l-2.1 2.1M16.3 31.7l-2.1 2.1" stroke-width="2" stroke-linecap="round"/>
+                  <circle class="icon-accent-filled" cx="24" cy="24" r="2.5"/>
+                </svg>
+              </span>
+              <span class="industry-label">Mašinska industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M10 30h28l-4-12H14l-4 12z" stroke-width="2" stroke-linejoin="round"/>
+                  <path class="icon-primary" d="M16 18h16l2 6H14l2-6z" stroke-width="2" stroke-linejoin="round"/>
+                  <circle class="icon-accent" cx="16" cy="32" r="3" stroke-width="2"/>
+                  <circle class="icon-accent" cx="32" cy="32" r="3" stroke-width="2"/>
+                </svg>
+              </span>
+              <span class="industry-label">Automobilska Industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M14 12h20v5H14z" stroke-width="2"/>
+                  <path class="icon-primary" d="M18 17v19h12V17" stroke-width="2"/>
+                  <path class="icon-accent" d="M12 36h24" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="industry-label">Metalska Industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M12 38V20l12-9 12 9v18" stroke-width="2" stroke-linejoin="round"/>
+                  <path class="icon-accent" d="M20 38V27h8v11M20 22h8" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="industry-label">Građevinska industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <rect class="icon-primary" x="15" y="15" width="18" height="18" rx="2" stroke-width="2"/>
+                  <path class="icon-accent" d="M19 15V11M24 15V11M29 15V11M34 15V11M19 33v4M24 33v4M29 33v4M34 33v4M15 19H11M15 24H11M15 29H11M33 19h4M33 24h4M33 29h4" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="industry-label">Elektronska industirja</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M20 10h8v7l9 18H11l9-18v-7z" stroke-width="2" stroke-linejoin="round"/>
+                  <path class="icon-accent" d="M14 35h20" stroke-width="2" stroke-linecap="round"/>
+                  <circle class="icon-accent-filled" cx="24" cy="28" r="2"/>
+                </svg>
+              </span>
+              <span class="industry-label">Hemijska industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M24 12c-7 0-11 5.5-11 12s4.5 14 11 14 11-7 11-14-4-12-11-12z" stroke-width="2"/>
+                  <path class="icon-accent" d="M24 12V8c2.5 0 4.5 2 4.5 4.5" stroke-width="2" stroke-linecap="round"/>
+                  <path class="icon-accent" d="M20 22c2 2 6 2 8 0" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="industry-label">Prehrambena industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M14 10h20a2 2 0 012 2v24a2 2 0 01-2 2H14a2 2 0 01-2-2V12a2 2 0 012-2z" stroke-width="2"/>
+                  <path class="icon-accent" d="M18 18h12M18 24h12M18 30h8" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="industry-label">Papirna industrija</span>
+            </li>
+            <li>
+              <span class="industry-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none">
+                  <path class="icon-primary" d="M24 9c-9 5-15 15-15 23 0 9 7 13 15 9 8-4 15-10 15-23C39 23 33 13 24 9z" stroke-width="2" stroke-linejoin="round"/>
+                  <path class="icon-accent" d="M24 9v8M24 28c-4 0-7-2-8-5" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="industry-label">Duvanska industrija</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog -->
+    <section class="section blog reveal" id="blog">
+      <div class="container">
+        <header class="section-header section-header--row">
+          <div>
+            <span class="eyebrow">Blog</span>
+            <h2 class="section-title">Aktuelnosti</h2>
+          </div>
+          <a href="/blog/" class="btn btn-ghost">Svi članci →</a>
+        </header>
+
+        <div class="blog-grid">
+          <article class="blog-card">
+            <a href="/tka-logistics-na-transport-logistics-sajmu-u-minhenu-2025/" class="blog-card-media">
+              <img src="assets/images/blog/minhen-2025.png" alt="TKA Logistics na Transport Logistics sajmu u Minhenu 2025." width="1000" height="750" loading="lazy" decoding="async">
+            </a>
+            <div class="blog-card-body">
+              <time datetime="2025-06-13">jun 13, 2025</time>
+              <h3><a href="/tka-logistics-na-transport-logistics-sajmu-u-minhenu-2025/">TKA Logistics na Transport Logistics sajmu u Minhenu 2025.</a></h3>
+              <p>TKA Logistics na Transport Logistics sajmu u Minhenu 2025. Sa ponosom va</p>
+              <a href="/tka-logistics-na-transport-logistics-sajmu-u-minhenu-2025/" class="link-arrow">Dalje <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="blog-card">
+            <a href="/tka-logistics-d-o-o-i-epaket-d-o-o-partnerstvo-koje-donosi-paketomate-srbiji/" class="blog-card-media">
+              <img src="assets/images/blog/epaket-partnerstvo.png" alt="TKA Logistics d.o.o. i ePaket d.o.o. – Partnerstvo koje donosi Paketomate Srbiji" width="1024" height="576" loading="lazy" decoding="async">
+            </a>
+            <div class="blog-card-body">
+              <time datetime="2025-03-19">mart 19, 2025</time>
+              <h3><a href="/tka-logistics-d-o-o-i-epaket-d-o-o-partnerstvo-koje-donosi-paketomate-srbiji/">TKA Logistics d.o.o. i ePaket d.o.o. – Partnerstvo koje donosi Paketomate Srbiji</a></h3>
+              <p>TKA Logistics d.o.o. i ePaket d.o.o. – Partnerstvo koje donosi Paketom</p>
+              <a href="/tka-logistics-d-o-o-i-epaket-d-o-o-partnerstvo-koje-donosi-paketomate-srbiji/" class="link-arrow">Dalje <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+          <article class="blog-card">
+            <a href="/kako-e-l-v-i-s-part-load-system-pomaze-u-efikasnom-zbirnom-uvozu-iz-nemacke/" class="blog-card-media">
+              <img src="assets/images/blog/elvis-part-load.png" alt="Kako E.L.V.I.S. Part Load System pomaže u efikasnom zbirnom uvozu iz Nemačke" width="1024" height="558" loading="lazy" decoding="async">
+            </a>
+            <div class="blog-card-body">
+              <time datetime="2025-03-18">mart 18, 2025</time>
+              <h3><a href="/kako-e-l-v-i-s-part-load-system-pomaze-u-efikasnom-zbirnom-uvozu-iz-nemacke/">Kako E.L.V.I.S. Part Load System Pomaže u Efikasnom Zbirnom Uvozu iz Nemačke</a></h3>
+              <p>Kako E.L.V.I.S. Part Load System Pomaže u Efikasnom Zbirnom Uvozu iz Ne</p>
+              <a href="/kako-e-l-v-i-s-part-load-system-pomaze-u-efikasnom-zbirnom-uvozu-iz-nemacke/" class="link-arrow">Dalje <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontakt CTA -->
+    <section class="section cta-band reveal" id="kontakt">
+      <div class="container">
+        <div class="cta-card">
+          <div>
+            <h2>Potreban vam je pouzdan logistički partner?</h2>
+            <p>Kontaktirajte nas danas — centralno locirani u Krnjevu, povezani sa celom Evropom.</p>
+          </div>
+          <a href="#upit" class="btn btn-primary btn-lg">Pošaljite upit</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="upit">
+    <div class="container footer-inquiry inquiry-grid">
+      <div class="inquiry-intro">
+        <span class="eyebrow">Popunite upit</span>
+        <h2 class="section-title">Pošaljite nam detalje vaše pošiljke</h2>
+        <p>Odaberite uslugu kako biste popunili dodatne podatke. Naš tim će vam se javiti u najkraćem roku.</p>
+      </div>
+
+      <form class="inquiry-form" id="inquiry-form" method="post" novalidate data-cf7-endpoint="https://www.tka.rs/wp-json/contact-form-7/v1/contact-forms/10533/feedback">
+        <div class="form-status" id="form-status" role="status" aria-live="polite" hidden></div>
+        <div class="form-row form-row--2">
+          <label>
+            <span>Ime i prezime</span>
+            <input type="text" name="first-and-last-name" required autocomplete="name">
+          </label>
+          <label>
+            <span>Firma</span>
+            <input type="text" name="company" required autocomplete="organization">
+          </label>
+        </div>
+        <div class="form-row form-row--2">
+          <label>
+            <span>Telefon</span>
+            <input type="tel" name="your-number" required autocomplete="tel">
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" name="your-email" required autocomplete="email">
+          </label>
+        </div>
+
+        <fieldset class="service-selector">
+          <legend>Odaberite uslugu kako biste popunili dodatne podatke:</legend>
+          <div class="service-radios">
+            <label class="service-radio">
+              <input type="radio" name="service-type" value="transport" data-solution="Transport ↓">
+              <span>Transport</span>
+            </label>
+            <label class="service-radio">
+              <input type="radio" name="service-type" value="skladistenje" data-solution="Skladištenje ↓">
+              <span>Skladištenje</span>
+            </label>
+            <label class="service-radio">
+              <input type="radio" name="service-type" value="carinjenje" data-solution="Carinjenje ↓">
+              <span>Carinjenje</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="form-panels" id="form-panels" hidden>
+        <div class="form-panel" id="form-transport" data-panel="transport" hidden>
+          <h3 class="form-panel-title">Transport</h3>
+          <div class="form-row form-row--2">
+            <label><span>Zemlja utovara</span><input type="text" name="origin"></label>
+            <label><span>Poštanski broj utovara</span><input type="text" name="origin-postal-code"></label>
+          </div>
+          <label><span>Mesto utovara</span><input type="text" name="origin-city"></label>
+          <div class="form-row form-row--2">
+            <label><span>Zemlja istovara</span><input type="text" name="destination"></label>
+            <label><span>Poštanski broj istovara</span><input type="text" name="destination-postal-code"></label>
+          </div>
+          <label><span>Mesto istovara</span><input type="text" name="destination-city"></label>
+          <div class="form-row form-row--2">
+            <label><span>Vrsta robe</span><input type="text" name="vrsta"></label>
+            <label><span>Količina i pakovanje</span><input type="text" name="kolicina"></label>
+          </div>
+          <div class="form-row form-row--2">
+            <label><span>Dimenzije</span><input type="text" name="dimenzije"></label>
+            <label><span>Težina</span><input type="text" name="tezina"></label>
+          </div>
+          <label><span>Roba spremna od</span><input type="date" name="appointment-date"></label>
+          <label><span>Dodatne napomene</span><textarea name="additional-info" rows="3"></textarea></label>
+        </div>
+
+        <div class="form-panel" id="form-skladistenje" data-panel="skladistenje" hidden>
+          <h3 class="form-panel-title">Skladištenje</h3>
+          <div class="form-row form-row--2">
+            <label><span>Tip robe</span><input type="text" name="type"></label>
+            <label><span>Količina robe</span><input type="text" name="volume"></label>
+          </div>
+          <label><span>Dimenzije robe</span><input type="text" name="dimensions"></label>
+          <div class="form-row form-row--2">
+            <label><span>Trajanje skladištenja</span><input type="text" name="duration"></label>
+            <label><span>Posebni zahtevi</span><input type="text" name="conditions"></label>
+          </div>
+          <div class="form-row form-row--2">
+            <label><span>Frekvencija ulaza/izlaza</span><input type="text" name="frequency"></label>
+            <label><span>Vrsta skladišta</span><input type="text" name="warehouse-type"></label>
+          </div>
+          <label><span>Lokacija skladišta</span><input type="text" name="location"></label>
+          <label><span>Osiguranje robe</span><input type="text" name="additional-security"></label>
+        </div>
+
+        <div class="form-panel" id="form-carinjenje" data-panel="carinjenje" hidden>
+          <h3 class="form-panel-title">Carinjenje</h3>
+          <div class="form-row form-row--2">
+            <label><span>Tip robe</span><input type="text" name="merch-type"></label>
+            <label><span>Zemlja porekla/destinacija</span><input type="text" name="origin-destination"></label>
+          </div>
+          <div class="form-row form-row--2">
+            <label><span>Vrednost robe</span><input type="text" name="merch-value"></label>
+            <label><span>Dokumentacija</span><input type="text" name="documentation"></label>
+          </div>
+          <div class="form-row form-row--2">
+            <label><span>Tip uvoza/izvoza</span><input type="text" name="customs-type"></label>
+            <label><span>Prevozno sredstvo</span><input type="text" name="vehicle-type"></label>
+          </div>
+          <label><span>Specifične carinske procedure</span><input type="text" name="specific-customs-type"></label>
+          <div class="form-row form-row--2">
+            <label><span>Osiguranje</span><input type="text" name="insurance-during-customs"></label>
+            <label><span>Prijava carinskim organima</span><input type="text" name="customs-authorities"></label>
+          </div>
+          <label><span>Granični prelaz</span><input type="text" name="border-crossing"></label>
+        </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Pošalji</button>
+      </form>
+    </div>
+
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="assets/images/logo-tka.png" alt="TKA Logistics" width="140" height="60" class="footer-logo">
+        <p>Transport Kombi As Logistics d.o.o.</p>
+      </div>
+      <address class="footer-address">
+        <p>Nikole Pašića 142, 11319 Krnjevo, Srbija</p>
+        <p>PIB: 103523015</p>
+        <p>Matični broj: 17612034</p>
+        <p>D-U-N-S® broj: 360310315</p>
+      </address>
+      <div class="footer-links">
+        <a href="/wp-content/uploads/2024/10/Prilog-1-Opsti-uslovi-poslovanja.pdf" target="_blank" rel="noopener">TKA - Opšti Uslovi Poslovanja</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© 2026 TKA, All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <script src="js/form.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

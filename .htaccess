@@ -1,0 +1,26 @@
+# TKA static homepage – deploy at WordPress document root (public_html)
+# Serves the new design on / while leaving other URLs to WordPress.
+
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# Serve existing files and directories as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Homepage: static index.html
+RewriteRule ^$ index.html [L]
+
+# English homepage
+RewriteRule ^en/?$ en/index.html [L]
+
+# Croatian homepage
+RewriteRule ^hr/?$ hr/index.html [L]
+
+# Everything else → WordPress
+RewriteRule . /index.php [L]
+</IfModule>
