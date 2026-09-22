@@ -2,7 +2,7 @@
   "use strict";
 
   const CF7_ENDPOINT = "https://www.tka.rs/wp-json/contact-form-7/v1/contact-forms/10533/feedback";
-  const PROXY_ENDPOINT = "api/submit-inquiry.php";
+  const PROXY_ENDPOINT = "/api/submit-inquiry.php";
 
   const SOLUTION_PAD = {
     transport: {

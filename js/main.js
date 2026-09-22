@@ -4,8 +4,6 @@
   const header = document.getElementById("header");
   const navToggle = document.querySelector(".nav-toggle");
   const mobileNav = document.getElementById("mobile-nav");
-  const navDropdown = document.querySelector(".nav-has-dropdown");
-  const dropdownTrigger = document.querySelector(".nav-dropdown-trigger");
 
   function onScroll() {
     if (window.scrollY > 8) {
@@ -17,33 +15,61 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  const dropdowns = [
+    ...document.querySelectorAll(".nav-has-dropdown"),
+    ...document.querySelectorAll(".lang-switch"),
+  ];
+
+  function closeDropdowns(except) {
+    dropdowns.forEach((dropdown) => {
+      if (dropdown === except) return;
+      dropdown.classList.remove("is-open");
+      const trigger = dropdown.querySelector("[aria-expanded]");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  dropdowns.forEach((dropdown) => {
+    const trigger = dropdown.querySelector(".nav-dropdown-trigger, .lang-switch__trigger");
+    if (!trigger) return;
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !dropdown.classList.contains("is-open");
+      closeDropdowns();
+      dropdown.classList.toggle("is-open", willOpen);
+      trigger.setAttribute("aria-expanded", String(willOpen));
+      if (willOpen && mobileNav && !mobileNav.hidden) {
+        setMobileNavOpen(false);
+      }
+    });
+  });
+
+  document.addEventListener("click", () => closeDropdowns());
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDropdowns();
+  });
+
+  function setMobileNavOpen(isOpen) {
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+    mobileNav.hidden = !isOpen;
+    document.documentElement.classList.toggle("nav-open", isOpen);
+    document.body.classList.toggle("nav-open", isOpen);
+    header.classList.toggle("is-nav-open", isOpen);
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    if (isOpen) closeDropdowns();
+  }
+
   if (navToggle && mobileNav) {
     navToggle.addEventListener("click", () => {
       const open = navToggle.getAttribute("aria-expanded") === "true";
-      navToggle.setAttribute("aria-expanded", String(!open));
-      mobileNav.hidden = open;
-      document.body.style.overflow = open ? "" : "hidden";
+      setMobileNavOpen(!open);
     });
 
     mobileNav.querySelectorAll("a").forEach((link) => {
       link.addEventListener("click", () => {
-        navToggle.setAttribute("aria-expanded", "false");
-        mobileNav.hidden = true;
-        document.body.style.overflow = "";
+        setMobileNavOpen(false);
       });
-    });
-  }
-
-  if (navDropdown && dropdownTrigger) {
-    dropdownTrigger.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const open = navDropdown.classList.toggle("is-open");
-      dropdownTrigger.setAttribute("aria-expanded", String(open));
-    });
-
-    document.addEventListener("click", () => {
-      navDropdown.classList.remove("is-open");
-      dropdownTrigger.setAttribute("aria-expanded", "false");
     });
   }
 

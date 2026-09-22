@@ -40,23 +40,36 @@
           <li><a href="/en/about-us/">About us</a></li>
           <li><a href="/en/blog-2/">Blog</a></li>
           <li><a href="/en/contact/">Contact</a></li>
-          <li class="lang-switch" aria-label="Language">
-            <a href="../" class="lang-switch__btn" hreflang="sr" lang="sr" title="Srpski">
-              <img src="../assets/flags/rs.svg" alt="" width="20" height="14" class="lang-flag">
-              <span>SR</span>
-            </a>
-            <a href="/en/" class="lang-switch__btn lang-switch__btn--active" hreflang="en" lang="en" title="English">
-              <img src="../assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag">
-              <span>EN</span>
-            </a>
-            <a href="../hr/" class="lang-switch__btn" hreflang="hr" lang="hr" title="Hrvatski">
-              <img src="../assets/flags/hr.svg" alt="" width="20" height="14" class="lang-flag">
-              <span>HR</span>
-            </a>
-          </li>
         </ul>
       </nav>
 
+      <div class="lang-switch">
+        <button type="button" class="lang-switch__trigger" aria-expanded="false" aria-controls="lang-menu" aria-label="Choose language">
+          <img src="../assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag">
+          <span>EN</span>
+          <svg class="lang-switch__chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <ul class="lang-switch__menu" id="lang-menu" role="listbox" aria-label="Language">
+        <li>
+          <a href="../" hreflang="sr" lang="sr">
+            <img src="../assets/flags/rs.svg" alt="" width="20" height="14" class="lang-flag">
+            <span>Srpski</span>
+          </a>
+        </li>
+        <li>
+          <a href="/en/" hreflang="en" lang="en" aria-current="true">
+            <img src="../assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag">
+            <span>English</span>
+          </a>
+        </li>
+        <li>
+          <a href="../hr/" hreflang="hr" lang="hr">
+            <img src="../assets/flags/hr.svg" alt="" width="20" height="14" class="lang-flag">
+            <span>Hrvatski</span>
+          </a>
+        </li>
+        </ul>
+      </div>
       <a href="#upit" class="btn btn-primary header-cta">Send inquiry</a>
 
       <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
@@ -71,8 +84,6 @@
         <li><a href="/en/about-us/">About us</a></li>
         <li><a href="/en/blog-2/">Blog</a></li>
         <li><a href="/en/contact/">Contact</a></li>
-        <li><a href="../" class="lang-switch__btn lang-switch__btn--mobile" hreflang="sr"><img src="../assets/flags/rs.svg" alt="" width="20" height="14" class="lang-flag"> Srpski</a></li>
-        <li><a href="../hr/" class="lang-switch__btn lang-switch__btn--mobile" hreflang="hr"><img src="../assets/flags/hr.svg" alt="" width="20" height="14" class="lang-flag"> Hrvatski</a></li>
         <li><a href="#upit" class="btn btn-primary">Send inquiry</a></li>
       </ul>
     </div>
@@ -98,16 +109,16 @@
                 <h2 class="hero-title">Groupage transport in Serbia<br><span class="hero-title-accent">and distribution</span></h2>
                 <p class="hero-lead">Need groupage transport and distribution in Serbia? Our central location in Krnjevo enables fast nationwide distribution.</p>
                 <div class="hero-actions">
-                  <a href="/en/domestic-transport-and-distribution/" class="btn btn-primary btn-lg hero-cta-primary">Read more</a>
-                  <a href="#upit" class="btn btn-secondary btn-lg hero-cta-secondary">Send inquiry</a>
+                  <a href="#upit" class="btn btn-primary btn-lg hero-cta-primary">Send inquiry</a>
+                  <a href="/en/groupage-transport-in-serbia-and-distribution/" class="btn btn-secondary btn-lg hero-cta-secondary">Learn more</a>
                 </div>
               </article>
               <article class="hero-copy-slide" data-slide="2">
                 <h2 class="hero-title">International groupage transport</h2>
                 <p class="hero-lead">Need international groupage transport? LTL, PTL and FTL across Europe, including ADR and temperature-controlled cargo.</p>
                 <div class="hero-actions">
-                  <a href="/en/international-road-transport/" class="btn btn-primary btn-lg hero-cta-primary">Read more</a>
-                  <a href="#upit" class="btn btn-secondary btn-lg hero-cta-secondary">Send inquiry</a>
+                  <a href="#upit" class="btn btn-primary btn-lg hero-cta-primary">Send inquiry</a>
+                  <a href="/en/international-groupage-transport/" class="btn btn-secondary btn-lg hero-cta-secondary">Learn more</a>
                 </div>
               </article>
             </div>
