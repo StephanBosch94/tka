@@ -139,20 +139,40 @@
   if (nextBtn) nextBtn.addEventListener("click", () => { nextSlide(); startAutoplay(); });
 
   const hero = document.querySelector(".hero");
-  const heroVideo = document.querySelector(".hero-video");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (heroVideo) {
+  document.querySelectorAll(".hero-video, .about-video").forEach((video) => {
     if (reduceMotion) {
-      heroVideo.removeAttribute("autoplay");
-      heroVideo.pause();
-    } else {
-      heroVideo.muted = true;
-      heroVideo.loop = true;
-      const play = heroVideo.play();
-      if (play && typeof play.then === "function") play.catch(() => {});
+      video.removeAttribute("autoplay");
+      video.pause();
+      return;
     }
-  }
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+
+    const tryPlay = () => {
+      const pending = video.play();
+      if (pending && typeof pending.catch === "function") pending.catch(() => {});
+    };
+
+    const reveal = () => video.classList.add("is-playing");
+    if (!video.paused && video.readyState >= 2) reveal();
+    video.addEventListener("playing", reveal);
+
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay);
+
+    const unlock = () => {
+      tryPlay();
+      if (!video.paused) window.removeEventListener("pointerdown", unlock);
+    };
+    window.addEventListener("pointerdown", unlock, { passive: true });
+  });
 
   if (hero && copySlides.length) {
     hero.addEventListener("mouseenter", stopAutoplay);

@@ -751,6 +751,18 @@ body.nav-open {
   object-fit: cover;
   object-position: center right;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.about-video {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.hero-video.is-playing,
+.about-video.is-playing {
+  opacity: 1;
 }
 
 .hero::before {
@@ -799,24 +811,25 @@ body.nav-open {
 }
 
 .hero-copy-track {
-  position: relative;
+  display: grid;
   min-height: 0;
 }
 
 .hero-copy-slide {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transform: translateY(12px);
   transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s;
 }
 
 .hero-copy-slide.is-active {
-  position: relative;
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
   transform: none;
+  z-index: 1;
 }
 
 .hero-title {
@@ -1391,8 +1404,10 @@ body.nav-open {
   box-shadow: var(--shadow-lg);
 }
 
-.about-photo {
+.about-photo,
+.about-video {
   width: 100%;
+  height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
@@ -1996,9 +2011,9 @@ body.nav-open {
     background:
       linear-gradient(
         180deg,
-        rgba(15, 24, 51, 0.9) 0%,
-        rgba(15, 24, 51, 0.78) 55%,
-        rgba(15, 24, 51, 0.72) 100%
+        rgba(15, 24, 51, 0.82) 0%,
+        rgba(15, 24, 51, 0.55) 48%,
+        rgba(15, 24, 51, 0.38) 100%
       ),
       radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: auto, 24px 24px;
@@ -2081,6 +2096,12 @@ body.nav-open {
 }
 
 @media (max-width: 768px) {
+  .partners-strip-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
   .hero {
     padding-block: 1rem 0.5rem;
   }
@@ -2169,6 +2190,36 @@ body.nav-open {
   background-color: var(--color-primary-dark);
   background-image: url("../assets/images/about-truck.jpg");
   background-size: cover;
+  background-position: center;
+}
+
+.page-hero--about {
+  background-image: url("../assets/images/about-ifa.jpg");
+  background-position: center 42%;
+}
+
+.page-hero--international {
+  background-image: url("../assets/images/hero-international-road.jpg");
+  background-position: center;
+}
+
+.page-hero--domestic {
+  background-image: url("../assets/images/hero-domestic-distribution.png");
+  background-position: center;
+}
+
+.page-hero--intermodal {
+  background-image: url("../assets/images/hero-intermodal.jpg");
+  background-position: center;
+}
+
+.page-hero--warehousing {
+  background-image: url("../assets/images/hero-warehousing.jpg");
+  background-position: center;
+}
+
+.page-hero--air-sea-rail {
+  background-image: url("../assets/images/hero-air-sea-rail.jpg");
   background-position: center;
 }
 
