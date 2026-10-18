@@ -43,6 +43,20 @@
         setMobileNavOpen(false);
       }
     });
+
+    if (dropdown.classList.contains("nav-has-dropdown")) {
+      dropdown.addEventListener("mouseenter", () => {
+        if (window.matchMedia("(max-width: 1100px)").matches) return;
+        closeDropdowns(dropdown);
+        dropdown.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      });
+      dropdown.addEventListener("mouseleave", () => {
+        if (window.matchMedia("(max-width: 1100px)").matches) return;
+        dropdown.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+      });
+    }
   });
 
   document.addEventListener("click", () => closeDropdowns());

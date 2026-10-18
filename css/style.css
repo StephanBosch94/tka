@@ -584,10 +584,20 @@ button, input, textarea, select {
   position: relative;
 }
 
+.nav-has-dropdown::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 0.65rem;
+}
+
 .nav-dropdown {
   position: absolute;
   top: calc(100% + 0.5rem);
   left: 0;
+  z-index: 30;
   min-width: 300px;
   padding: 0.5rem;
   background: var(--color-surface);
@@ -688,6 +698,26 @@ body.nav-open {
 
 .mobile-nav a:hover {
   background: var(--color-bg);
+}
+
+.mobile-services__label {
+  display: block;
+  padding: 1rem 1rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.mobile-services a {
+  padding: 0.7rem 1rem 0.7rem 1.35rem;
+  font-size: 1rem;
+}
+
+.mobile-services a[aria-current="page"] {
+  color: var(--color-primary);
+  background: rgba(24, 37, 75, 0.06);
 }
 
 .mobile-nav .btn {
@@ -2089,7 +2119,7 @@ body.nav-open {
   }
 
   .industry-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 }
 
