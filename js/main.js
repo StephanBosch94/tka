@@ -139,6 +139,21 @@
   if (nextBtn) nextBtn.addEventListener("click", () => { nextSlide(); startAutoplay(); });
 
   const hero = document.querySelector(".hero");
+  const heroVideo = document.querySelector(".hero-video");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (heroVideo) {
+    if (reduceMotion) {
+      heroVideo.removeAttribute("autoplay");
+      heroVideo.pause();
+    } else {
+      heroVideo.muted = true;
+      heroVideo.loop = true;
+      const play = heroVideo.play();
+      if (play && typeof play.then === "function") play.catch(() => {});
+    }
+  }
+
   if (hero && copySlides.length) {
     hero.addEventListener("mouseenter", stopAutoplay);
     hero.addEventListener("mouseleave", startAutoplay);
@@ -151,8 +166,6 @@
       hero.classList.add("is-ready");
     });
   }
-
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Count-up numbers
   function easeOutCubic(t) {

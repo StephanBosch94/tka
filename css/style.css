@@ -729,20 +729,35 @@ body.nav-open {
 .hero {
   position: relative;
   margin-top: var(--header-h);
-  padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2.5rem, 5vw, 4rem);
+  min-height: calc(100dvh - var(--header-h));
+  padding-block: clamp(1.25rem, 3vw, 2.5rem);
   color: rgba(255, 255, 255, 0.88);
   overflow: hidden;
   background-color: var(--color-primary-dark);
-  background-image: url("../assets/images/about-truck.jpg");
-  background-size: cover;
-  background-position: center right;
-  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  pointer-events: none;
 }
 
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
     linear-gradient(
       105deg,
@@ -764,7 +779,8 @@ body.nav-open {
 
 .hero-shell {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  width: 100%;
 }
 
 .hero-grid {
@@ -772,7 +788,7 @@ body.nav-open {
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
   align-items: center;
-  min-height: clamp(320px, 42vw, 480px);
+  min-height: 0;
 }
 
 .hero-content {
@@ -784,7 +800,7 @@ body.nav-open {
 
 .hero-copy-track {
   position: relative;
-  min-height: 12rem;
+  min-height: 0;
 }
 
 .hero-copy-slide {
@@ -1260,8 +1276,8 @@ body.nav-open {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: clamp(2.5rem, 5vw, 4rem);
-  padding-top: 2rem;
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+  padding-top: 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -1851,6 +1867,7 @@ body.nav-open {
 }
 
 .service-radio {
+  position: relative;
   cursor: pointer;
 }
 
@@ -1864,8 +1881,15 @@ body.nav-open {
   transition: background var(--transition), border-color var(--transition);
 }
 
-.service-radio input {
+.inquiry-form .service-radio input {
   position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
   opacity: 0;
   pointer-events: none;
 }
@@ -1961,11 +1985,11 @@ body.nav-open {
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
-    min-height: clamp(280px, 50vw, 380px);
+    min-height: 0;
   }
 
-  .hero {
-    background-position: center center;
+  .hero-video {
+    object-position: center center;
   }
 
   .hero::before {
@@ -2009,7 +2033,7 @@ body.nav-open {
   }
 
   .hero-copy-track {
-    min-height: 10rem;
+    min-height: 0;
   }
 
   .hero-metrics {
@@ -2057,6 +2081,18 @@ body.nav-open {
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding-block: 1rem 0.5rem;
+  }
+
+  .hero-actions {
+    margin-bottom: 1rem;
+  }
+
+  .hero .metric-card {
+    padding: 0.85rem 0.75rem;
+  }
+
   .hero-metrics {
     grid-template-columns: 1fr 1fr;
   }
