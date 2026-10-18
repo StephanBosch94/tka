@@ -1323,7 +1323,7 @@ body.nav-open {
 
 .section-header--row .section-desc {
   margin-top: 0;
-  text-align: right;
+  text-align: left;
 }
 
 /* About */

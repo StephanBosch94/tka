@@ -18,9 +18,6 @@ RewriteRule ^$ index.html [L]
 # English homepage
 RewriteRule ^en/?$ en/index.html [L]
 
-# Croatian homepage
-RewriteRule ^hr/?$ hr/index.html [L]
-
 # Everything else → WordPress
 RewriteRule . /index.php [L]
 </IfModule>
