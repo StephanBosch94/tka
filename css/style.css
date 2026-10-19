@@ -2241,6 +2241,13 @@ body.nav-open {
   background-position: center;
 }
 
+.page-hero:not(.page-hero--about):not(.page-hero--article) {
+  min-height: 100vh;
+  min-height: calc(100dvh - var(--header-h));
+  display: flex;
+  align-items: center;
+}
+
 .page-hero--about {
   background-image: url("../assets/images/about-ifa.jpg");
   background-position: center 42%;
