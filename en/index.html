@@ -562,42 +562,42 @@
         <div class="form-panel" id="form-skladistenje" data-panel="skladistenje" hidden>
           <h3 class="form-panel-title">Warehousing</h3>
           <div class="form-row form-row--2">
-            <label><span>Goods type</span><input type="text" name="type"></label>
-            <label><span>Quantity</span><input type="text" name="volume"></label>
+            <label><span>Goods type</span><input type="text" name="type" placeholder="(e.g. perishable, dangerous goods, oversized cargo)"></label>
+            <label><span>Quantity</span><input type="text" name="volume" placeholder="(m3, kg, number of pallets)"></label>
           </div>
-          <label><span>Dimensions</span><input type="text" name="dimensions"></label>
+          <label><span>Dimensions</span><input type="text" name="dimensions" placeholder="(pallet, box, etc.)"></label>
           <div class="form-row form-row--2">
-            <label><span>Storage duration</span><input type="text" name="duration"></label>
-            <label><span>Special requirements</span><input type="text" name="conditions"></label>
+            <label><span>Storage duration</span><input type="text" name="duration" placeholder="(short-term or long-term)"></label>
+            <label><span>Special requirements</span><input type="text" name="conditions" placeholder="(temperature, humidity, security)"></label>
           </div>
           <div class="form-row form-row--2">
-            <label><span>In/out frequency</span><input type="text" name="frequency"></label>
-            <label><span>Warehouse type</span><input type="text" name="warehouse-type"></label>
+            <label><span>In/out frequency</span><input type="text" name="frequency" placeholder="(how many inbound / how many outbound)"></label>
+            <label><span>Warehouse type</span><input type="text" name="warehouse-type" placeholder="(cold store, dry space, customs warehouse)"></label>
           </div>
-          <label><span>Warehouse location</span><input type="text" name="location"></label>
-          <label><span>Cargo insurance</span><input type="text" name="additional-security"></label>
+          <label><span>Warehouse location</span><input type="text" name="location" placeholder="(warehouse location)"></label>
+          <label><span>Cargo insurance</span><input type="text" name="additional-security" placeholder="(extra warehouse insurance – yes/no)"></label>
         </div>
 
         <div class="form-panel" id="form-carinjenje" data-panel="carinjenje" hidden>
           <h3 class="form-panel-title">Customs</h3>
           <div class="form-row form-row--2">
-            <label><span>Goods type</span><input type="text" name="merch-type"></label>
-            <label><span>Country of origin/destination</span><input type="text" name="origin-destination"></label>
+            <label><span>Goods type</span><input type="text" name="merch-type" placeholder="(goods to be imported/exported, including tariff numbers (HS codes))"></label>
+            <label><span>Country of origin/destination</span><input type="text" name="origin-destination" placeholder="(where the goods come from and where they go)"></label>
           </div>
           <div class="form-row form-row--2">
-            <label><span>Goods value</span><input type="text" name="merch-value"></label>
-            <label><span>Documentation</span><input type="text" name="documentation"></label>
+            <label><span>Goods value</span><input type="text" name="merch-value" placeholder="(commercial value of the goods being imported/exported)"></label>
+            <label><span>Documentation</span><input type="text" name="documentation" placeholder="(invoices, certificates, certificates of origin)"></label>
           </div>
           <div class="form-row form-row--2">
-            <label><span>Import/export type</span><input type="text" name="customs-type"></label>
-            <label><span>Mode of transport</span><input type="text" name="vehicle-type"></label>
+            <label><span>Import/export type</span><input type="text" name="customs-type" placeholder="(temporary or permanent import/export)"></label>
+            <label><span>Mode of transport</span><input type="text" name="vehicle-type" placeholder="(road, sea or air transport)"></label>
           </div>
-          <label><span>Specific customs procedures</span><input type="text" name="specific-customs-type"></label>
+          <label><span>Specific customs procedures</span><input type="text" name="specific-customs-type" placeholder="(transit, temporary import, re-export)"></label>
           <div class="form-row form-row--2">
-            <label><span>Insurance</span><input type="text" name="insurance-during-customs"></label>
-            <label><span>Customs authority filing</span><input type="text" name="customs-authorities"></label>
+            <label><span>Insurance</span><input type="text" name="insurance-during-customs" placeholder="(is insurance needed during the customs process?)"></label>
+            <label><span>Customs authority filing</span><input type="text" name="customs-authorities" placeholder="(representation for the whole customs process or only certain stages)"></label>
           </div>
-          <label><span>Border crossing</span><input type="text" name="border-crossing"></label>
+          <label><span>Border crossing</span><input type="text" name="border-crossing" placeholder="(customs offices or crossings where the goods will be cleared)"></label>
         </div>
         </div>
 

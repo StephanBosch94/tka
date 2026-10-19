@@ -1844,6 +1844,13 @@ body.nav-open {
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-sm);
   color: #fff;
+  color-scheme: dark;
+}
+
+.inquiry-form input::placeholder,
+.inquiry-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.62);
+  opacity: 1;
 }
 
 .inquiry-form input:focus,
@@ -1851,6 +1858,12 @@ body.nav-open {
   outline: none;
   border-color: var(--color-accent-warm);
   background: rgba(255, 255, 255, 0.1);
+}
+
+.inquiry-form input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.9;
+  cursor: pointer;
 }
 
 .service-selector {
@@ -2126,7 +2139,19 @@ body.nav-open {
   }
 
   .hero {
-    padding-block: 1rem 0.5rem;
+    padding-block: 3rem 2.75rem;
+  }
+
+  .hero .pill-badge {
+    display: none;
+  }
+
+  .footer-bottom {
+    justify-content: flex-start;
+  }
+
+  .footer-credit {
+    margin-left: 0;
   }
 
   .hero-actions {
