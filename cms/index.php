@@ -244,7 +244,7 @@ $loggedIn = cms_logged_in();
   </a>
   <?php if ($loggedIn): ?>
     <nav class="top-links" aria-label="CMS">
-      <a class="text-link" href="/blog/" target="_blank" rel="noopener">Pogledaj blog</a>
+      <a class="text-link" href="../blog/" target="_blank" rel="noopener">Pogledaj blog</a>
       <a class="text-link" href="?action=logout">Odjava</a>
     </nav>
   <?php endif; ?>
@@ -483,7 +483,7 @@ $loggedIn = cms_logged_in();
             </div>
             <div class="row-actions">
               <a href="?action=edit&slug=<?= cms_e($post['slug']) ?>">Izmeni</a>
-              <a class="view" href="/<?= cms_e($post['slug']) ?>/" target="_blank" rel="noopener">Pogledaj</a>
+              <a class="view" href="../<?= cms_e($post['slug']) ?>/" target="_blank" rel="noopener">Pogledaj</a>
               <form method="post" onsubmit="return confirm('Obrisati ovaj članak?')">
                 <input type="hidden" name="csrf" value="<?= cms_e($token) ?>">
                 <input type="hidden" name="action" value="delete">

@@ -9,12 +9,25 @@ function cms_e(string $value): string
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
+function cms_install_path(): string
+{
+    $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+    $root = dirname(dirname($script));
+    if ($root === '/' || $root === '.' || $root === '\\') {
+        return '/';
+    }
+    return rtrim($root, '/') . '/';
+}
+
 function cms_start(): void
 {
     if (session_status() !== PHP_SESSION_ACTIVE) {
+        $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
         session_set_cookie_params([
+            'path' => cms_install_path(),
             'httponly' => true,
             'samesite' => 'Lax',
+            'secure' => $https,
         ]);
         session_start();
     }
@@ -156,7 +169,7 @@ function cms_find(array $posts, string $slug): ?int
 function cms_card(array $post, string $prefix, string $lang): string
 {
     $slug = cms_e($post['slug']);
-    $href = '/' . $slug . '/';
+    $href = $prefix . $slug . '/';
     $title = $post[$lang === 'en' ? 'title_en' : 'title_sr'] ?: $post['title_sr'];
     $excerpt = $post[$lang === 'en' ? 'excerpt_en' : 'excerpt_sr'] ?: $post['excerpt_sr'];
     $more = $lang === 'en' ? 'Read more' : 'Dalje';
@@ -238,23 +251,23 @@ function cms_article(array $post): string
 <body>
   <header class="site-header" id="header">
     <div class="header-inner">
-      <a href="/" class="logo" aria-label="TKA Logistics – početna"><img src="../assets/images/logo-tka.png" alt="TKA Logistics" width="173" height="75" class="logo-img"></a>
+      <a href="../" class="logo" aria-label="TKA Logistics – početna"><img src="../assets/images/logo-tka.png" alt="TKA Logistics" width="173" height="75" class="logo-img"></a>
       <nav class="nav-main" aria-label="Glavna navigacija">
         <ul class="nav-list">
-          <li><a href="/">Home</a></li>
+          <li><a href="../">Home</a></li>
           <li class="nav-has-dropdown">
             <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-controls="nav-usluge">Usluge <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
             <ul class="nav-dropdown" id="nav-usluge">
-              <li><a href="/medjunarodni-drumski-transport/">Međunarodni drumski transport</a></li>
-              <li><a href="/domaci-transport-i-distribucija/">Domaći transport i distribucija</a></li>
-              <li><a href="/intermodalni-transport/">Intermodalni transport</a></li>
-              <li><a href="/skladistenje-i-carinsko-zastupanje/">Skladištenje i carinsko zastupanje</a></li>
-              <li><a href="/avio-brodski-i-zeleznicki-transport/">Avio, brodski i železnički transport</a></li>
+              <li><a href="../medjunarodni-drumski-transport/">Međunarodni drumski transport</a></li>
+              <li><a href="../domaci-transport-i-distribucija/">Domaći transport i distribucija</a></li>
+              <li><a href="../intermodalni-transport/">Intermodalni transport</a></li>
+              <li><a href="../skladistenje-i-carinsko-zastupanje/">Skladištenje i carinsko zastupanje</a></li>
+              <li><a href="../avio-brodski-i-zeleznicki-transport/">Avio, brodski i železnički transport</a></li>
             </ul>
           </li>
-          <li><a href="/o-nama/">O nama</a></li>
-          <li><a href="/blog/" aria-current="page">Blog</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
+          <li><a href="../o-nama/">O nama</a></li>
+          <li><a href="../blog/" aria-current="page">Blog</a></li>
+          <li><a href="../kontakt/">Kontakt</a></li>
         </ul>
       </nav>
       <div class="lang-switch">
@@ -264,26 +277,26 @@ function cms_article(array $post): string
           <svg class="lang-switch__chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         </button>
         <ul class="lang-switch__menu" id="lang-menu" role="listbox" aria-label="Jezik">
-          <li><a href="/{$slug}/" hreflang="sr" lang="sr" aria-current="true"><img src="../assets/flags/rs.svg" alt="" width="20" height="14" class="lang-flag"><span>Srpski</span></a></li>
-          <li><a href="/en/blog-2/" hreflang="en" lang="en"><img src="../assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag"><span>English</span></a></li>
+          <li><a href="../{$slug}/" hreflang="sr" lang="sr" aria-current="true"><img src="../assets/flags/rs.svg" alt="" width="20" height="14" class="lang-flag"><span>Srpski</span></a></li>
+          <li><a href="../en/blog-2/" hreflang="en" lang="en"><img src="../assets/flags/en.svg" alt="" width="20" height="14" class="lang-flag"><span>English</span></a></li>
         </ul>
       </div>
-      <a href="/kontakt/#upit" class="btn btn-primary header-cta">Pošalji upit</a>
+      <a href="../kontakt/#upit" class="btn btn-primary header-cta">Pošalji upit</a>
       <button type="button" class="nav-toggle" aria-label="Otvori meni" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
     </div>
     <div class="mobile-nav" id="mobile-nav" hidden>
       <ul>
-        <li><a href="/">Home</a></li>
+        <li><a href="../">Home</a></li>
         <li class="mobile-services"><span class="mobile-services__label">Usluge</span><ul>
-          <li><a href="/medjunarodni-drumski-transport/">Međunarodni drumski transport</a></li>
-          <li><a href="/domaci-transport-i-distribucija/">Domaći transport i distribucija</a></li>
-          <li><a href="/intermodalni-transport/">Intermodalni transport</a></li>
-          <li><a href="/skladistenje-i-carinsko-zastupanje/">Skladištenje i carinsko zastupanje</a></li>
-          <li><a href="/avio-brodski-i-zeleznicki-transport/">Avio, brodski i železnički transport</a></li>
+          <li><a href="../medjunarodni-drumski-transport/">Međunarodni drumski transport</a></li>
+          <li><a href="../domaci-transport-i-distribucija/">Domaći transport i distribucija</a></li>
+          <li><a href="../intermodalni-transport/">Intermodalni transport</a></li>
+          <li><a href="../skladistenje-i-carinsko-zastupanje/">Skladištenje i carinsko zastupanje</a></li>
+          <li><a href="../avio-brodski-i-zeleznicki-transport/">Avio, brodski i železnički transport</a></li>
         </ul></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-        <li><a href="/kontakt/#upit" class="btn btn-primary">Pošalji upit</a></li>
+        <li><a href="../blog/">Blog</a></li>
+        <li><a href="../kontakt/">Kontakt</a></li>
+        <li><a href="../kontakt/#upit" class="btn btn-primary">Pošalji upit</a></li>
       </ul>
     </div>
   </header>
@@ -309,7 +322,7 @@ function cms_article(array $post): string
       <div class="container">
         <div class="cta-card">
           <div><h2>Želite da sarađujete sa TKA?</h2><p>Pošaljite upit i nastavimo razgovor.</p></div>
-          <a href="/kontakt/#upit" class="btn btn-primary btn-lg">Pošaljite upit</a>
+          <a href="../kontakt/#upit" class="btn btn-primary btn-lg">Pošaljite upit</a>
         </div>
       </div>
     </section>
@@ -318,7 +331,7 @@ function cms_article(array $post): string
     <div class="container footer-grid">
       <div class="footer-brand"><img src="../assets/images/logo-tka.png" alt="TKA Logistics" width="140" height="60" class="footer-logo"><p>Transport Kombi As Logistics d.o.o.</p></div>
       <address class="footer-address"><p>Nikole Pašića 142, 11319 Krnjevo, Srbija</p></address>
-      <div class="footer-links"><a href="/blog/">Blog</a></div>
+      <div class="footer-links"><a href="../blog/">Blog</a></div>
     </div>
     <div class="container footer-bottom"><p>© 2026 TKA, All Rights Reserved</p><a class="footer-credit" href="https://gowithflow.rs">Created by gowithflow.rs</a></div>
   </footer>

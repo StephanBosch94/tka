@@ -1,23 +1,20 @@
-# TKA static homepage – deploy at WordPress document root (public_html)
-# Serves the new design on / while leaving other URLs to WordPress.
+# Rules stay inside this folder, so the site and /cms/ work on any host or subpath.
 
 DirectoryIndex index.html index.php
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /
 
-# Serve existing files and directories as-is
+# Real files and folders, including cms/, are served from here
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Homepage: static index.html
-RewriteRule ^$ index.html [L]
+RewriteRule ^cms(/|$) - [L]
 
-# English homepage
+RewriteRule ^$ index.html [L]
 RewriteRule ^en/?$ en/index.html [L]
 
-# Everything else → WordPress
-RewriteRule . /index.php [L]
+# Unknown paths stay in this folder instead of the domain root
+RewriteRule . index.php [L]
 </IfModule>
