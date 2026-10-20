@@ -1,0 +1,74 @@
+:root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 Manrope, system-ui, sans-serif; background: #f4f6fa; color: #0b1220; }
+  a { color: #18254b; }
+  button, input, textarea { font: inherit; }
+  .topbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.25rem; background: #fff; border-bottom: 1px solid #e2e8f0; }
+  .brand { display: flex; align-items: center; gap: 0.85rem; color: inherit; text-decoration: none; }
+  .brand img { width: 92px; height: auto; }
+  .brand span { font-family: "Plus Jakarta Sans", Manrope, sans-serif; font-weight: 700; }
+  .top-links { display: flex; align-items: center; gap: 0.4rem; }
+  .text-link { padding: 0.45rem 0.7rem; color: #4a5568; text-decoration: none; font-weight: 700; font-size: 0.92rem; }
+  .wrap { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 3rem; }
+  .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1rem; }
+  h1 { margin: 0; font-family: "Plus Jakarta Sans", Manrope, sans-serif; font-size: 1.85rem; letter-spacing: -0.03em; }
+  .muted { margin: 0.2rem 0 0; color: #718096; }
+  .button, button.primary { border: 0; border-radius: 999px; padding: 0.72rem 1.05rem; background: #e48736; color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+  .button:hover, button.primary:hover { background: #c46f22; }
+  .ghost { background: #fff; color: #18254b; border: 1px solid #d5dce8; }
+  .ghost:hover { background: #f4f6fa; }
+  .error, .ok { margin: 0 0 1rem; padding: 0.85rem 1rem; border-radius: 12px; }
+  .error { background: #fff1f0; color: #9b2c2c; }
+  .ok { background: #eefaf1; color: #17663a; }
+  .post-list { display: grid; gap: 0.85rem; list-style: none; margin: 0; padding: 0; }
+  .post { display: grid; grid-template-columns: 168px minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: 0.75rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; }
+  .post img, .thumb-empty { width: 168px; height: 112px; object-fit: cover; border-radius: 12px; background: #e8ecf4; }
+  .thumb-empty { display: grid; place-items: center; color: #718096; font-size: 0.8rem; font-weight: 700; }
+  .post h2 { margin: 0.15rem 0 0.3rem; font-size: 1.05rem; line-height: 1.35; }
+  .post h2 a { color: inherit; text-decoration: none; }
+  .post h2 a:hover { color: #c46f22; }
+  .post time { color: #e48736; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+  .post p { margin: 0; color: #4a5568; font-size: 0.92rem; }
+  .row-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.4rem; min-width: 7.5rem; }
+  .row-actions a, .row-actions button { border-radius: 999px; padding: 0.45rem 0.8rem; text-align: center; text-decoration: none; font-weight: 700; font-size: 0.9rem; }
+  .row-actions a { background: #18254b; color: #fff; }
+  .row-actions .view { background: transparent; color: #18254b; }
+  .danger { border: 0; background: transparent; color: #9b2c2c; cursor: pointer; }
+  .empty { padding: 2.5rem 1.5rem; text-align: center; background: #fff; border: 1px dashed #d5dce8; border-radius: 18px; }
+  .empty h2 { margin: 0 0 0.4rem; }
+  .gate { width: min(440px, calc(100% - 2rem)); margin: 8vh auto; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 1.25rem; }
+  .stack { display: grid; gap: 0.9rem; }
+  .editor { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.25rem; align-items: start; }
+  .fields { display: grid; gap: 1rem; }
+  .panel h2 { margin: 0 0 0.9rem; font-size: 1rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  label, .field { display: grid; gap: 0.35rem; font-size: 0.82rem; font-weight: 800; }
+  .hint { font-weight: 500; color: #718096; }
+  input, textarea { width: 100%; padding: 0.72rem 0.8rem; border: 1px solid #d5dce8; border-radius: 10px; background: #fff; color: inherit; font-weight: 500; }
+  textarea { min-height: 320px; line-height: 1.55; resize: vertical; }
+  input:focus, textarea:focus { outline: 2px solid rgba(228, 135, 54, 0.45); border-color: #e48736; }
+  .cover { position: relative; display: grid; min-height: 180px; border: 1px dashed #d5dce8; border-radius: 14px; overflow: hidden; background: #f8fafc; cursor: pointer; }
+  .cover img { width: 100%; height: 220px; object-fit: cover; }
+  .cover span { position: absolute; right: 0; bottom: 0; left: 0; padding: 0.7rem 0.8rem; background: rgba(11, 18, 32, 0.72); color: #fff; text-align: center; font-weight: 700; }
+  .cover input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.45rem; }
+  .toolbar button { border: 1px solid #d5dce8; background: #fff; border-radius: 8px; padding: 0.28rem 0.55rem; font-size: 0.82rem; font-weight: 800; cursor: pointer; }
+  .form-actions { display: flex; gap: 0.6rem; align-items: center; }
+  .preview { position: sticky; top: 5.5rem; }
+  .mini-card { overflow: hidden; padding: 0; }
+  .mini-card img, .mini-fallback { width: 100%; height: 168px; object-fit: cover; background: #e8ecf4; }
+  .mini-card img:not([hidden]) { display: block; }
+  .mini-fallback:not([hidden]) { display: grid; place-items: center; color: #718096; font-size: 0.85rem; font-weight: 700; }
+  .mini-body { padding: 1rem 1rem 1.15rem; }
+  .mini-body time { color: #e48736; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+  .mini-body h3 { margin: 0.35rem 0; font-size: 1.02rem; line-height: 1.35; }
+  .mini-body p { margin: 0; color: #4a5568; font-size: 0.88rem; }
+  @media (max-width: 860px) {
+    .post, .editor, .grid { grid-template-columns: 1fr; }
+    .post img, .thumb-empty { width: 100%; height: 180px; }
+    .row-actions { flex-direction: row; flex-wrap: wrap; }
+    .preview { position: static; }
+    .page-head, .topbar { align-items: flex-start; }
+    .topbar { flex-wrap: wrap; }
+  }

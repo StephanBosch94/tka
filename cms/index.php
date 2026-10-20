@@ -3,7 +3,34 @@
 require __DIR__ . '/lib.php';
 cms_start();
 
+function cms_wants_json(): bool
+{
+    return (($_POST['format'] ?? $_GET['format'] ?? '') === 'json');
+}
+
+function cms_respond(array $payload, int $status = 200): void
+{
+    if (!cms_wants_json()) {
+        return;
+    }
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    header('X-Frame-Options: DENY');
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $action = $_POST['action'] ?? $_GET['action'] ?? 'list';
+
+if ($action === 'status') {
+    $_GET['format'] = 'json';
+    cms_respond([
+        'php' => true,
+        'setup' => cms_config() === null,
+        'auth' => cms_logged_in(),
+        'csrf' => cms_token(),
+    ]);
+}
 $error = '';
 $notice = '';
 if (isset($_GET['saved'])) {
@@ -29,6 +56,7 @@ if ($action === 'setup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Lozinka nije sačuvana. Proverite dozvole za fasciklu cms/.';
         } else {
             $_SESSION['cms_user'] = true;
+            cms_respond(['ok' => true, 'csrf' => cms_token()]);
             header('Location: ./');
             exit;
         }
@@ -43,10 +71,12 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($config && password_verify($password, (string) ($config['password_hash'] ?? ''))) {
         session_regenerate_id(true);
         $_SESSION['cms_user'] = true;
+        cms_respond(['ok' => true, 'csrf' => cms_token()]);
         header('Location: ./');
         exit;
     }
     $error = 'Pogrešna lozinka.';
+    cms_respond(['ok' => false, 'error' => $error], 401);
     $action = 'login';
 }
 
@@ -55,6 +85,16 @@ if ($action === 'logout') {
     session_destroy();
     header('Location: ./');
     exit;
+}
+
+if ($action === 'posts') {
+    if (!cms_logged_in()) {
+        cms_respond(['ok' => false, 'error' => 'Potrebna je prijava.'], 401);
+        header('Location: ./');
+        exit;
+    }
+    $_GET['format'] = 'json';
+    cms_respond(['ok' => true, 'posts' => cms_posts(), 'csrf' => cms_token()]);
 }
 
 $config = cms_config();
@@ -77,6 +117,7 @@ if (cms_logged_in() && $_SERVER['REQUEST_METHOD'] === 'POST' && in_array($action
             array_splice($posts, $index, 1);
             cms_save_posts($posts);
             cms_publish($posts, $slug);
+            cms_respond(['ok' => true]);
             header('Location: ./?deleted=1');
             exit;
         }
@@ -135,12 +176,18 @@ if (cms_logged_in() && $_SERVER['REQUEST_METHOD'] === 'POST' && in_array($action
         }
         cms_save_posts($posts);
         cms_publish(cms_posts(), $remove);
+        cms_respond(['ok' => true]);
         header('Location: ./?saved=1');
         exit;
     } catch (RuntimeException $exception) {
         $error = $exception->getMessage();
+        cms_respond(['ok' => false, 'error' => $error], 400);
         $action = 'edit';
     }
+}
+
+if ($error !== '') {
+    cms_respond(['ok' => false, 'error' => $error], 400);
 }
 
 header('Content-Type: text/html; charset=utf-8');
@@ -159,82 +206,7 @@ $loggedIn = cms_logged_in();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { color-scheme: light; }
-    * { box-sizing: border-box; }
-    body { margin: 0; font: 16px/1.5 Manrope, system-ui, sans-serif; background: #f4f6fa; color: #0b1220; }
-    a { color: #18254b; }
-    button, input, textarea { font: inherit; }
-    .topbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.85rem 1.25rem; background: #fff; border-bottom: 1px solid #e2e8f0; }
-    .brand { display: flex; align-items: center; gap: 0.85rem; color: inherit; text-decoration: none; }
-    .brand img { width: 92px; height: auto; }
-    .brand span { font-family: "Plus Jakarta Sans", Manrope, sans-serif; font-weight: 700; }
-    .top-links { display: flex; align-items: center; gap: 0.4rem; }
-    .text-link { padding: 0.45rem 0.7rem; color: #4a5568; text-decoration: none; font-weight: 700; font-size: 0.92rem; }
-    .wrap { width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 3rem; }
-    .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1rem; }
-    h1 { margin: 0; font-family: "Plus Jakarta Sans", Manrope, sans-serif; font-size: 1.85rem; letter-spacing: -0.03em; }
-    .muted { margin: 0.2rem 0 0; color: #718096; }
-    .button, button.primary { border: 0; border-radius: 999px; padding: 0.72rem 1.05rem; background: #e48736; color: #fff; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
-    .button:hover, button.primary:hover { background: #c46f22; }
-    .ghost { background: #fff; color: #18254b; border: 1px solid #d5dce8; }
-    .ghost:hover { background: #f4f6fa; }
-    .error, .ok { margin: 0 0 1rem; padding: 0.85rem 1rem; border-radius: 12px; }
-    .error { background: #fff1f0; color: #9b2c2c; }
-    .ok { background: #eefaf1; color: #17663a; }
-    .post-list { display: grid; gap: 0.85rem; list-style: none; margin: 0; padding: 0; }
-    .post { display: grid; grid-template-columns: 168px minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: 0.75rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; }
-    .post img, .thumb-empty { width: 168px; height: 112px; object-fit: cover; border-radius: 12px; background: #e8ecf4; }
-    .thumb-empty { display: grid; place-items: center; color: #718096; font-size: 0.8rem; font-weight: 700; }
-    .post h2 { margin: 0.15rem 0 0.3rem; font-size: 1.05rem; line-height: 1.35; }
-    .post h2 a { color: inherit; text-decoration: none; }
-    .post h2 a:hover { color: #c46f22; }
-    .post time { color: #e48736; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
-    .post p { margin: 0; color: #4a5568; font-size: 0.92rem; }
-    .row-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.4rem; min-width: 7.5rem; }
-    .row-actions a, .row-actions button { border-radius: 999px; padding: 0.45rem 0.8rem; text-align: center; text-decoration: none; font-weight: 700; font-size: 0.9rem; }
-    .row-actions a { background: #18254b; color: #fff; }
-    .row-actions .view { background: transparent; color: #18254b; }
-    .danger { border: 0; background: transparent; color: #9b2c2c; cursor: pointer; }
-    .empty { padding: 2.5rem 1.5rem; text-align: center; background: #fff; border: 1px dashed #d5dce8; border-radius: 18px; }
-    .empty h2 { margin: 0 0 0.4rem; }
-    .gate { width: min(440px, calc(100% - 2rem)); margin: 8vh auto; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 1.25rem; }
-    .stack { display: grid; gap: 0.9rem; }
-    .editor { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.25rem; align-items: start; }
-    .fields { display: grid; gap: 1rem; }
-    .panel h2 { margin: 0 0 0.9rem; font-size: 1rem; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
-    label, .field { display: grid; gap: 0.35rem; font-size: 0.82rem; font-weight: 800; }
-    .hint { font-weight: 500; color: #718096; }
-    input, textarea { width: 100%; padding: 0.72rem 0.8rem; border: 1px solid #d5dce8; border-radius: 10px; background: #fff; color: inherit; font-weight: 500; }
-    textarea { min-height: 320px; line-height: 1.55; resize: vertical; }
-    input:focus, textarea:focus { outline: 2px solid rgba(228, 135, 54, 0.45); border-color: #e48736; }
-    .cover { position: relative; display: grid; min-height: 180px; border: 1px dashed #d5dce8; border-radius: 14px; overflow: hidden; background: #f8fafc; cursor: pointer; }
-    .cover img { width: 100%; height: 220px; object-fit: cover; }
-    .cover span { position: absolute; right: 0; bottom: 0; left: 0; padding: 0.7rem 0.8rem; background: rgba(11, 18, 32, 0.72); color: #fff; text-align: center; font-weight: 700; }
-    .cover input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .toolbar { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.45rem; }
-    .toolbar button { border: 1px solid #d5dce8; background: #fff; border-radius: 8px; padding: 0.28rem 0.55rem; font-size: 0.82rem; font-weight: 800; cursor: pointer; }
-    .form-actions { display: flex; gap: 0.6rem; align-items: center; }
-    .preview { position: sticky; top: 5.5rem; }
-    .mini-card { overflow: hidden; padding: 0; }
-    .mini-card img, .mini-fallback { width: 100%; height: 168px; object-fit: cover; background: #e8ecf4; }
-    .mini-card img:not([hidden]) { display: block; }
-    .mini-fallback:not([hidden]) { display: grid; place-items: center; color: #718096; font-size: 0.85rem; font-weight: 700; }
-    .mini-body { padding: 1rem 1rem 1.15rem; }
-    .mini-body time { color: #e48736; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
-    .mini-body h3 { margin: 0.35rem 0; font-size: 1.02rem; line-height: 1.35; }
-    .mini-body p { margin: 0; color: #4a5568; font-size: 0.88rem; }
-    @media (max-width: 860px) {
-      .post, .editor, .grid { grid-template-columns: 1fr; }
-      .post img, .thumb-empty { width: 100%; height: 180px; }
-      .row-actions { flex-direction: row; flex-wrap: wrap; }
-      .preview { position: static; }
-      .page-head, .topbar { align-items: flex-start; }
-      .topbar { flex-wrap: wrap; }
-    }
-  </style>
+  <link rel="stylesheet" href="editor.css">
 </head>
 <body>
 <header class="topbar">
