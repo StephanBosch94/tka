@@ -2467,7 +2467,7 @@ body.nav-open {
 
 .value-card {
   padding: 1.5rem;
-  background: var(--color-bg);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
 }
