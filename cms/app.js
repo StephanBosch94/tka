@@ -98,10 +98,6 @@
 
   function renderList() {
     logout.hidden = !(php && php.auth);
-    var tokenBox = "";
-    if (!php) {
-      tokenBox = '<label class="card">GitHub token za objavu<input id="token" type="password" autocomplete="off" value="' + esc(sessionStorage.getItem("tka-cms-token") || "") + '"><span class="hint">Potreban je samo na hostu bez PHP-a. Token ostaje u ovom pregledaču i upisuje članak u repozitorijum sa kog se sajt postavlja.</span></label>';
-    }
     var rows = posts.map(function (post) {
       var image = post.image ? '<img src="../' + esc(post.image) + '" alt="">' : '<div class="thumb-empty">Bez slike</div>';
       return '<li class="post">' + image +
@@ -112,10 +108,8 @@
     app.className = "wrap";
     app.innerHTML = message() +
       '<div class="page-head"><div><h1>Članci</h1><p class="muted">' + countLabel(posts.length) + "</p></div>" +
-      '<a class="button" href="?edit=new">Novi članak</a></div>' + tokenBox +
+      '<a class="button" href="?edit=new">Novi članak</a></div>' +
       (posts.length ? '<ul class="post-list">' + rows + "</ul>" : '<div class="empty"><h2>Još nema članaka</h2><p class="muted">Dodajte prvi tekst i on će se pojaviti na početnoj i na blogu.</p></div>');
-    var token = document.getElementById("token");
-    if (token) token.addEventListener("change", function () { sessionStorage.setItem("tka-cms-token", token.value.trim()); });
     app.querySelectorAll("[data-delete]").forEach(function (button) {
       button.addEventListener("click", function () { removePost(button.getAttribute("data-delete")); });
     });
@@ -124,10 +118,11 @@
   function renderGate() {
     logout.hidden = true;
     app.className = "gate";
-    if (php.setup) {
-      app.innerHTML = '<form class="card stack" id="gate"><h1>Lozinka za blog</h1><p class="muted">Prvi put ovde. Lozinka ostaje samo na serveru.</p><label>Lozinka<input type="password" name="password" required minlength="10" autocomplete="new-password"></label><label>Ponovite lozinku<input type="password" name="password_again" required minlength="10" autocomplete="new-password"></label><p class="error" hidden></p><button class="primary" type="submit">Sačuvaj lozinku</button></form>';
+    var user = '<label>Korisničko ime<input type="text" name="username" required minlength="3" maxlength="40" autocomplete="username" autofocus></label>';
+    if (php && php.setup) {
+      app.innerHTML = '<form class="card stack" id="gate"><h1>Nalog za blog</h1><p class="muted">Prvi put ovde. Korisničko ime i lozinka ostaju samo na serveru i otvaraju dodavanje i izmenu članaka.</p>' + user + '<label>Lozinka<input type="password" name="password" required minlength="10" autocomplete="new-password"></label><label>Ponovite lozinku<input type="password" name="password_again" required minlength="10" autocomplete="new-password"></label><p class="error" hidden></p><button class="primary" type="submit">Sačuvaj nalog</button></form>';
     } else {
-      app.innerHTML = '<form class="card stack" id="gate"><h1>Prijava</h1><p class="muted">Unesite lozinku da biste dodali ili izmenili članak.</p><label>Lozinka<input type="password" name="password" required autocomplete="current-password"></label><p class="error" hidden></p><button class="primary" type="submit">Prijava</button></form>';
+      app.innerHTML = '<form class="card stack" id="gate"><h1>Prijava</h1><p class="muted">Unesite korisničko ime i lozinku da biste dodali ili izmenili članak.</p>' + user + '<label>Lozinka<input type="password" name="password" required autocomplete="current-password"></label><p class="error" hidden></p><button class="primary" type="submit">Prijava</button></form>';
     }
     document.getElementById("gate").addEventListener("submit", submitGate);
   }
@@ -240,6 +235,12 @@
   async function submitGate(event) {
     event.preventDefault();
     var form = event.currentTarget;
+    var error = form.querySelector(".error");
+    if (!php) {
+      error.hidden = false;
+      error.textContent = "Prijava radi na serveru sajta. Ovaj pregled nema PHP, pa nalog ovde ne može da se proveri.";
+      return;
+    }
     var body = new FormData(form);
     body.set("action", php.setup ? "setup" : "login");
     body.set("format", "json");
@@ -247,7 +248,6 @@
     var response = await fetch("index.php", { method: "POST", body: body, credentials: "same-origin" });
     var data = await response.json().catch(function () { return {}; });
     if (!response.ok) {
-      var error = form.querySelector(".error");
       error.hidden = false;
       error.textContent = data.error || "Prijava nije uspela.";
       return;
@@ -370,10 +370,8 @@
   }
 
   async function publishStatic(formData, deleteSlug) {
-    var token = (document.getElementById("token") && document.getElementById("token").value.trim()) || sessionStorage.getItem("tka-cms-token") || "";
-    if (!token) token = window.prompt("GitHub token za objavu. Na ovom hostu nema PHP-a, pa se članak upisuje u repozitorijum.") || "";
-    if (!token) throw new Error("Objava je zaustavljena jer nema tokena.");
-    sessionStorage.setItem("tka-cms-token", token);
+    var token = sessionStorage.getItem("tka-cms-token") || "";
+    if (!token) throw new Error("Objava na ovom pregledu nije moguća. Otvorite CMS na serveru i prijavite se korisničkim imenom i lozinkom.");
     var siteResponse = await fetch("site.json");
     if (!siteResponse.ok) throw new Error("Repozitorijum nije podešen.");
     var site = await siteResponse.json();
@@ -483,7 +481,7 @@
   async function start() {
     var edit = params().get("edit");
     php = await phpStatus();
-    if (php && (php.setup || !php.auth)) {
+    if (!php || php.setup || !php.auth) {
       renderGate();
       return;
     }

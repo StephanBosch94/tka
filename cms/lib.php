@@ -59,6 +59,27 @@ function cms_config(): ?array
     return is_array($config) ? $config : null;
 }
 
+function cms_clean_username(string $value): string
+{
+    $value = strtolower(trim($value));
+    return preg_match('/^[a-z0-9._-]{3,40}$/', $value) ? $value : '';
+}
+
+function cms_username(): string
+{
+    $config = cms_config();
+    if (!is_array($config)) {
+        return '';
+    }
+    return cms_clean_username((string) ($config['username'] ?? ''));
+}
+
+function cms_write_config(array $config): bool
+{
+    $php = "<?php\nreturn " . var_export($config, true) . ";\n";
+    return file_put_contents(CMS_CONFIG, $php, LOCK_EX) !== false;
+}
+
 function cms_logged_in(): bool
 {
     return !empty($_SESSION['cms_user']);
