@@ -1,57 +1,10 @@
 (function () {
   "use strict";
 
-  const CF7_ENDPOINT = "https://www.tka.rs/wp-json/contact-form-7/v1/contact-forms/10533/feedback";
-  const PROXY_ENDPOINT = "/api/submit-inquiry.php";
-
-  const SOLUTION_PAD = {
-    transport: {
-      "origin-destination": "-",
-      "vehicle-type": "-",
-      "specific-customs-type": "-",
-      volume: "-",
-      dimensions: "-",
-    },
-    skladistenje: {
-      origin: "-",
-      "origin-postal-code": "-",
-      "origin-city": "-",
-      destination: "-",
-      "destination-postal-code": "-",
-      "destination-city": "-",
-      vrsta: "-",
-      kolicina: "-",
-      dimenzije: "-",
-      tezina: "-",
-      "appointment-date": new Date().toISOString().slice(0, 10),
-      "origin-destination": "-",
-      "vehicle-type": "-",
-      "specific-customs-type": "-",
-    },
-    carinjenje: {
-      origin: "-",
-      "origin-postal-code": "-",
-      "origin-city": "-",
-      destination: "-",
-      "destination-postal-code": "-",
-      "destination-city": "-",
-      vrsta: "-",
-      kolicina: "-",
-      dimenzije: "-",
-      tezina: "-",
-      "appointment-date": new Date().toISOString().slice(0, 10),
-      volume: "-",
-      dimensions: "-",
-    },
-  };
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/maeqrbzg";
 
   function getSelectedServiceRadio(form) {
     return form.querySelector('input[name="service-type"]:checked');
-  }
-
-  function getActiveSolution(form) {
-    const radio = getSelectedServiceRadio(form);
-    return radio ? radio.dataset.solution : null;
   }
 
   function getActivePanelId(form) {
@@ -95,15 +48,32 @@
     updateServicePanels(form);
   }
 
+  function fieldLabel(el) {
+    const span = el.closest("label")?.querySelector("span");
+    return span ? span.textContent.trim() : el.name;
+  }
+
   function collectFormData(form) {
     const panelId = getActivePanelId(form);
     if (!panelId) return null;
+
+    const isEn = document.documentElement.lang === "en";
+    const name = form.elements["first-and-last-name"]?.value?.trim() || "";
+    const email = form.elements["your-email"]?.value?.trim() || "";
+    const services = {
+      transport: "Transport",
+      skladistenje: "Skladištenje",
+      carinjenje: "Carinjenje",
+    };
+    const service = services[panelId] || panelId;
     const data = {
-      "first-and-last-name": form.elements["first-and-last-name"]?.value?.trim(),
-      company: form.elements.company?.value?.trim(),
-      "your-number": form.elements["your-number"]?.value?.trim(),
-      "your-email": form.elements["your-email"]?.value?.trim(),
-      "solution[]": getActiveSolution(form),
+      Usluga: service,
+      email,
+      name,
+      company: form.elements.company?.value?.trim() || "",
+      phone: form.elements["your-number"]?.value?.trim() || "",
+      _subject: service + " — " + (isEn ? "TKA inquiry" : "TKA upit") + " — " + name,
+      _gotcha: "",
     };
 
     const panel = form.querySelector(`[data-panel="${panelId}"]`);
@@ -111,14 +81,11 @@
       panel.querySelectorAll("input, textarea, select").forEach((el) => {
         if (!el.name || el.disabled) return;
         if (el.type === "checkbox" || el.type === "radio") return;
-        data[el.name] = el.value?.trim() ?? "";
+        const value = el.value?.trim() ?? "";
+        if (!value) return;
+        data[fieldLabel(el)] = value;
       });
     }
-
-    const pad = SOLUTION_PAD[panelId] || {};
-    Object.entries(pad).forEach(([key, value]) => {
-      if (!data[key]) data[key] = value;
-    });
 
     return data;
   }
@@ -131,36 +98,17 @@
     box.className = `form-status form-status--${type}`;
   }
 
-  async function submitViaProxy(data) {
-    const res = await fetch(PROXY_ENDPOINT, {
+  async function submitViaFormspree(data) {
+    const res = await fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(data),
     });
-    return res.json();
-  }
-
-  async function submitViaCf7(data) {
-    const body = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (key.endsWith("[]")) {
-        body.append(key, value);
-      } else {
-        body.append(key, value);
-      }
-    });
-
-    body.append("_wpcf7", "10533");
-    body.append("_wpcf7_version", "6.0.4");
-    body.append("_wpcf7_locale", "en_US");
-    body.append("_wpcf7_unit_tag", "wpcf7-f10533-p11123-o1");
-    body.append("_wpcf7_container_post", "11123");
-
-    const res = await fetch(CF7_ENDPOINT, {
-      method: "POST",
-      body,
-    });
-    return res.json();
+    const body = await res.json().catch(() => ({}));
+    return { ok: res.ok, body };
   }
 
   async function handleSubmit(event) {
@@ -190,17 +138,12 @@
     const payload = collectFormData(form);
 
     try {
-      let result;
-      try {
-        result = await submitViaProxy(payload);
-      } catch {
-        result = await submitViaCf7(payload);
-      }
+      const result = await submitViaFormspree(payload);
 
-      if (result.status === "mail_sent") {
+      if (result.ok) {
         showStatus(
           form,
-          result.message || "Hvala! Vaš upit je uspešno poslat.",
+          isEn ? "Thank you! Your inquiry has been sent." : "Hvala! Vaš upit je uspešno poslat.",
           "success"
         );
         form.reset();
@@ -209,20 +152,22 @@
         const dateInput = form.elements["appointment-date"];
         if (dateInput) dateInput.min = today;
       } else {
-        const errors = (result.invalid_fields || [])
-          .map((f) => f.message)
+        const errors = (Array.isArray(result.body.errors) ? result.body.errors : [])
+          .map((item) => item.message)
           .filter(Boolean)
           .join(" ");
         showStatus(
           form,
-          errors || result.message || "Greška pri slanju. Proverite polja i pokušajte ponovo.",
+          errors || (isEn ? "Something went wrong. Check the fields and try again." : "Greška pri slanju. Proverite polja i pokušajte ponovo."),
           "error"
         );
       }
     } catch {
       showStatus(
         form,
-        "Nije moguće poslati upit. Pišite nam na kontakt@tka.rs ili pozovite telefonom.",
+        isEn
+          ? "The inquiry could not be sent. Email us at upiti@tka.rs or call us."
+          : "Nije moguće poslati upit. Pišite nam na upiti@tka.rs ili pozovite telefonom.",
         "error"
       );
     } finally {
