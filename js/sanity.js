@@ -91,12 +91,12 @@
   }
 
   function query(groq, params) {
-    var url = "https://" + projectId + ".apicdn.sanity.io/v" + api + "/data/query/" + dataset +
+    var url = "https://" + projectId + ".api.sanity.io/v" + api + "/data/query/" + dataset +
       "?perspective=published&query=" + encodeURIComponent(groq);
     Object.keys(params || {}).forEach(function (key) {
       url += "&$" + key + "=" + encodeURIComponent(JSON.stringify(params[key]));
     });
-    return fetch(url).then(function (response) {
+    return fetch(url, { cache: "no-store" }).then(function (response) {
       if (!response.ok) throw new Error("sanity");
       return response.json();
     }).then(function (payload) {
