@@ -4,6 +4,7 @@
   var months = ["januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar", "decembar"];
   var reserved = ["assets", "api", "blog", "cms", "content", "css", "en", "js", "kontakt", "o-nama", "medjunarodni-drumski-transport", "domaci-transport-i-distribucija", "intermodalni-transport", "skladistenje-i-carinsko-zastupanje", "avio-brodski-i-zeleznicki-transport", "medjunarodni-zbirni-transport", "zbirni-transport-u-srbiji-i-distribucija"];
   var php = null;
+  var account = null;
   var posts = [];
 
   function esc(value) {
@@ -64,6 +65,95 @@
     return new URLSearchParams(location.search);
   }
 
+  function cleanUsername(value) {
+    value = String(value || "").trim().toLowerCase();
+    return /^[a-z0-9._-]{3,40}$/.test(value) ? value : "";
+  }
+
+  function sameHex(a, b) {
+    if (a.length !== b.length) return false;
+    var diff = 0;
+    for (var i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    return diff === 0;
+  }
+
+  function normalizeAccount(data) {
+    if (!data) return null;
+    var username = cleanUsername(data.username);
+    var salt = String(data.salt || "");
+    var passwordHash = String(data.password_hash || "");
+    if (!username || !/^[a-f0-9]{32}$/.test(salt) || !/^[a-f0-9]{64}$/.test(passwordHash)) return null;
+    return { username: username, salt: salt, password_hash: passwordHash };
+  }
+
+  async function fetchAccount(url, options) {
+    try {
+      var response = await fetch(url, options);
+      if (!response.ok) return null;
+      var text = await response.text();
+      if (!text || text.trim().charAt(0) !== "{") return null;
+      return normalizeAccount(JSON.parse(text));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async function loadAccount() {
+    var file = await fetchAccount("auth.json", { cache: "no-store" });
+    if (file) return file;
+    try {
+      var siteResponse = await fetch("site.json", { cache: "no-store" });
+      if (siteResponse.ok) {
+        var site = await siteResponse.json();
+        var remote = await fetchAccount("https://api.github.com/repos/" + site.owner + "/" + site.repo + "/contents/cms/auth.json?ref=" + encodeURIComponent(site.branch), {
+          headers: { Accept: "application/vnd.github.raw", "X-GitHub-Api-Version": "2022-11-28" },
+          signal: AbortSignal.timeout(4000)
+        });
+        if (remote) return remote;
+      }
+    } catch (error) {}
+    try {
+      return normalizeAccount(JSON.parse(localStorage.getItem("tka-cms-account") || "null"));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function rememberAccount(next) {
+    localStorage.setItem("tka-cms-account", JSON.stringify(next));
+    account = next;
+  }
+
+  function randomHex(size) {
+    var bytes = new Uint8Array(size);
+    crypto.getRandomValues(bytes);
+    var hex = "";
+    for (var i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, "0");
+    return hex;
+  }
+
+  async function storeAccountFile(next) {
+    try {
+      await fetch("auth.json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next)
+      });
+    } catch (error) {}
+  }
+
+  async function syncServer(action, fields) {
+    if (!php) return { ok: true };
+    var body = new FormData();
+    body.set("action", action);
+    body.set("format", "json");
+    body.set("csrf", php.csrf || "");
+    Object.keys(fields).forEach(function (key) { body.set(key, fields[key]); });
+    var response = await fetch("index.php", { method: "POST", body: body, credentials: "same-origin" });
+    var data = await response.json().catch(function () { return {}; });
+    return { ok: response.ok, error: data.error || "" };
+  }
+
   async function phpStatus() {
     try {
       var response = await fetch("index.php?action=status&format=json", { credentials: "same-origin", headers: { Accept: "application/json" } });
@@ -97,7 +187,7 @@
   }
 
   function renderList() {
-    logout.hidden = !(php && php.auth);
+    logout.hidden = false;
     var rows = posts.map(function (post) {
       var image = post.image ? '<img src="../' + esc(post.image) + '" alt="">' : '<div class="thumb-empty">Bez slike</div>';
       return '<li class="post">' + image +
@@ -115,12 +205,12 @@
     });
   }
 
-  function renderGate() {
+  function renderGate(setup) {
     logout.hidden = true;
     app.className = "gate";
     var user = '<label>Korisničko ime<input type="text" name="username" required minlength="3" maxlength="40" autocomplete="username" autofocus></label>';
-    if (php && php.setup) {
-      app.innerHTML = '<form class="card stack" id="gate"><h1>Nalog za blog</h1><p class="muted">Prvi put ovde. Korisničko ime i lozinka ostaju samo na serveru i otvaraju dodavanje i izmenu članaka.</p>' + user + '<label>Lozinka<input type="password" name="password" required minlength="10" autocomplete="new-password"></label><label>Ponovite lozinku<input type="password" name="password_again" required minlength="10" autocomplete="new-password"></label><p class="error" hidden></p><button class="primary" type="submit">Sačuvaj nalog</button></form>';
+    if (setup) {
+      app.innerHTML = '<form class="card stack" id="gate" data-setup="1"><h1>Nalog za blog</h1><p class="muted">Izaberite korisničko ime i lozinku. Isti nalog važi na svakom domenu na kom je sajt.</p>' + user + '<label>Lozinka<input type="password" name="password" required minlength="10" autocomplete="new-password"></label><label>Ponovite lozinku<input type="password" name="password_again" required minlength="10" autocomplete="new-password"></label><p class="error" hidden></p><button class="primary" type="submit">Sačuvaj nalog</button></form>';
     } else {
       app.innerHTML = '<form class="card stack" id="gate"><h1>Prijava</h1><p class="muted">Unesite korisničko ime i lozinku da biste dodali ili izmenili članak.</p>' + user + '<label>Lozinka<input type="password" name="password" required autocomplete="current-password"></label><p class="error" hidden></p><button class="primary" type="submit">Prijava</button></form>';
     }
@@ -128,7 +218,7 @@
   }
 
   function renderEdit(slug) {
-    logout.hidden = !(php && php.auth);
+    logout.hidden = false;
     var post = posts.filter(function (item) { return item.slug === slug; })[0] || {
       slug: "", date: today(), image: "", title_sr: "", title_en: "", excerpt_sr: "", excerpt_en: "", lead_sr: "", body_sr: ""
     };
@@ -236,22 +326,59 @@
     event.preventDefault();
     var form = event.currentTarget;
     var error = form.querySelector(".error");
-    if (!php) {
+    var button = form.querySelector("button");
+    function fail(text) {
       error.hidden = false;
-      error.textContent = "Prijava radi na serveru sajta. Ovaj pregled nema PHP, pa nalog ovde ne može da se proveri.";
-      return;
+      error.textContent = text;
+      button.disabled = false;
     }
-    var body = new FormData(form);
-    body.set("action", php.setup ? "setup" : "login");
-    body.set("format", "json");
-    body.set("csrf", php.csrf || "");
-    var response = await fetch("index.php", { method: "POST", body: body, credentials: "same-origin" });
-    var data = await response.json().catch(function () { return {}; });
-    if (!response.ok) {
-      error.hidden = false;
-      error.textContent = data.error || "Prijava nije uspela.";
-      return;
+    button.disabled = true;
+    error.hidden = true;
+    var data = new FormData(form);
+    var username = cleanUsername(data.get("username"));
+    var password = String(data.get("password") || "");
+    var again = String(data.get("password_again") || "");
+    if (!username) return fail("Korisničko ime: 3–40 karaktera, slova, brojevi, tačka ili crtica.");
+    var setup = form.getAttribute("data-setup") === "1";
+    if (setup) {
+      if (password.length < 10) return fail("Lozinka mora imati najmanje 10 karaktera.");
+      if (password !== again) return fail("Lozinke se ne poklapaju.");
+      var salt = randomHex(16);
+      var createdHash = await tkaPbkdf2(password, salt);
+      var created = { username: username, salt: salt, password_hash: createdHash };
+      if (php && php.setup) {
+        var saved = await syncServer("setup", {
+          username: username,
+          password: password,
+          password_again: again,
+          salt: salt,
+          password_hash: createdHash
+        });
+        if (!saved.ok) return fail(saved.error || "Nalog nije sačuvan.");
+      }
+      rememberAccount(created);
+      await storeAccountFile(created);
+    } else if (!account) {
+      var serverLogin = await syncServer("login", { username: username, password: password });
+      if (!serverLogin.ok) return fail(serverLogin.error || "Pogrešno korisničko ime ili lozinka.");
+    } else {
+      var hash = await tkaPbkdf2(password, account.salt);
+      if (username !== account.username || !sameHex(hash, account.password_hash)) {
+        return fail("Pogrešno korisničko ime ili lozinka.");
+      }
+      if (php && php.setup) {
+        await syncServer("setup", {
+          username: username,
+          password: password,
+          password_again: password,
+          salt: account.salt,
+          password_hash: account.password_hash
+        });
+      } else if (php) {
+        await syncServer("login", { username: username, password: password });
+      }
     }
+    sessionStorage.setItem("tka-cms-user", username);
     location.href = "./";
   }
 
@@ -371,7 +498,7 @@
 
   async function publishStatic(formData, deleteSlug) {
     var token = sessionStorage.getItem("tka-cms-token") || "";
-    if (!token) throw new Error("Objava na ovom pregledu nije moguća. Otvorite CMS na serveru i prijavite se korisničkim imenom i lozinkom.");
+    if (!token) throw new Error("Članak nije objavljen.");
     var siteResponse = await fetch("site.json");
     if (!siteResponse.ok) throw new Error("Repozitorijum nije podešen.");
     var site = await siteResponse.json();
@@ -481,8 +608,20 @@
   async function start() {
     var edit = params().get("edit");
     php = await phpStatus();
-    if (!php || php.setup || !php.auth) {
-      renderGate();
+    account = await loadAccount();
+    if (!logout.dataset.bound) {
+      logout.dataset.bound = "1";
+      logout.addEventListener("click", function (event) {
+        event.preventDefault();
+        sessionStorage.removeItem("tka-cms-user");
+        if (php) location.href = "index.php?action=logout";
+        else location.href = "./";
+      });
+    }
+    var sessionUser = sessionStorage.getItem("tka-cms-user") || "";
+    var signedIn = (php && php.auth) || (account && sessionUser === account.username) || (!account && php && !php.setup && sessionUser);
+    if (!signedIn) {
+      renderGate(!account && !(php && !php.setup));
       return;
     }
     try {

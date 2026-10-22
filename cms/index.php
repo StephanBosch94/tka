@@ -26,7 +26,7 @@ if ($action === 'status') {
     $_GET['format'] = 'json';
     cms_respond([
         'php' => true,
-        'setup' => cms_config() === null,
+        'setup' => cms_config() === null && cms_auth_account() === null,
         'auth' => cms_logged_in(),
         'csrf' => cms_token(),
     ]);
@@ -44,7 +44,13 @@ if ($action === 'setup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = cms_clean_username((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
     $again = (string) ($_POST['password_again'] ?? '');
-    if (cms_config() !== null) {
+    $salt = strtolower((string) ($_POST['salt'] ?? ''));
+    if (!preg_match('/^[a-f0-9]{32}$/', $salt)) {
+        $salt = bin2hex(random_bytes(16));
+    }
+    $hash = strtolower((string) ($_POST['password_hash'] ?? ''));
+    $calc = hash_pbkdf2('sha256', $password, (string) hex2bin($salt), 100000, 64);
+    if (cms_config() !== null || cms_auth_account() !== null) {
         $error = 'Nalog je već podešen.';
     } elseif ($username === '') {
         $error = 'Korisničko ime: 3–40 karaktera, slova, brojevi, tačka ili crtica.';
@@ -52,20 +58,20 @@ if ($action === 'setup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Lozinka mora imati najmanje 10 karaktera.';
     } elseif (!hash_equals($password, $again)) {
         $error = 'Lozinke se ne poklapaju.';
+    } elseif ($hash !== '' && !hash_equals($calc, $hash)) {
+        $error = 'Nalog nije sačuvan.';
+    } elseif (!cms_write_auth(['username' => $username, 'salt' => $salt, 'password_hash' => $calc])) {
+        $error = 'Nalog nije sačuvan. Proverite dozvole za fasciklu cms/.';
     } else {
-        $saved = cms_write_config([
+        cms_write_config([
             'username' => $username,
             'password_hash' => password_hash($password, PASSWORD_DEFAULT),
         ]);
-        if (!$saved) {
-            $error = 'Nalog nije sačuvan. Proverite dozvole za fasciklu cms/.';
-        } else {
-            session_regenerate_id(true);
-            $_SESSION['cms_user'] = $username;
-            cms_respond(['ok' => true, 'csrf' => cms_token()]);
-            header('Location: ./');
-            exit;
-        }
+        session_regenerate_id(true);
+        $_SESSION['cms_user'] = $username;
+        cms_respond(['ok' => true, 'csrf' => cms_token()]);
+        header('Location: ./');
+        exit;
     }
     cms_respond(['ok' => false, 'error' => $error], 400);
     $action = 'setup';
@@ -74,17 +80,24 @@ if ($action === 'setup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     cms_check_token();
     $config = cms_config();
+    $account = cms_auth_account();
     $username = cms_clean_username((string) ($_POST['username'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
     $stored = cms_username();
-    $passwordOk = $config && password_verify($password, (string) ($config['password_hash'] ?? ''));
+    $passwordOk = ($config && password_verify($password, (string) ($config['password_hash'] ?? '')))
+        || ($account && cms_auth_password($password, $account));
     $usernameOk = $stored === '' || ($username !== '' && hash_equals($stored, $username));
     if ($username === '' || !$passwordOk || !$usernameOk) {
         $error = 'Pogrešno korisničko ime ili lozinka.';
         cms_respond(['ok' => false, 'error' => $error], 401);
         $action = 'login';
     } else {
-        if ($stored === '') {
+        if ($config === null) {
+            cms_write_config([
+                'username' => $username,
+                'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+            ]);
+        } elseif ($stored === '') {
             $config['username'] = $username;
             cms_write_config($config);
         }
@@ -114,7 +127,7 @@ if ($action === 'posts') {
 }
 
 $config = cms_config();
-if ($config === null) {
+if ($config === null && cms_auth_account() === null) {
     $action = 'setup';
 } elseif (!cms_logged_in() && $action !== 'login') {
     $action = 'login';
@@ -246,7 +259,7 @@ $loggedIn = cms_logged_in();
         <input type="hidden" name="csrf" value="<?= cms_e($token) ?>">
         <input type="hidden" name="action" value="setup">
         <h1>Nalog za blog</h1>
-        <p class="muted">Prvi put ovde. Korisničko ime i lozinka ostaju samo na serveru i otvaraju dodavanje i izmenu članaka.</p>
+        <p class="muted">Izaberite korisničko ime i lozinku. Isti nalog važi na svakom domenu na kom je sajt.</p>
         <label>Korisničko ime<input type="text" name="username" required minlength="3" maxlength="40" pattern="[A-Za-z0-9._-]{3,40}" autocomplete="username" autofocus></label>
         <label>Lozinka<input type="password" name="password" required minlength="10" autocomplete="new-password"></label>
         <label>Ponovite lozinku<input type="password" name="password_again" required minlength="10" autocomplete="new-password"></label>

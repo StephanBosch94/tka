@@ -3,6 +3,7 @@
 const CMS_ROOT = __DIR__ . '/..';
 const CMS_POSTS = CMS_ROOT . '/content/posts.json';
 const CMS_CONFIG = __DIR__ . '/config.php';
+const CMS_AUTH = __DIR__ . '/auth.json';
 
 function cms_e(string $value): string
 {
@@ -65,13 +66,49 @@ function cms_clean_username(string $value): string
     return preg_match('/^[a-z0-9._-]{3,40}$/', $value) ? $value : '';
 }
 
+function cms_auth_account(): ?array
+{
+    if (!is_file(CMS_AUTH)) {
+        return null;
+    }
+    $data = json_decode((string) file_get_contents(CMS_AUTH), true);
+    if (!is_array($data)) {
+        return null;
+    }
+    $username = cms_clean_username((string) ($data['username'] ?? ''));
+    $salt = (string) ($data['salt'] ?? '');
+    $hash = (string) ($data['password_hash'] ?? '');
+    if ($username === '' || !preg_match('/^[a-f0-9]{32}$/', $salt) || !preg_match('/^[a-f0-9]{64}$/', $hash)) {
+        return null;
+    }
+    return ['username' => $username, 'salt' => $salt, 'password_hash' => $hash];
+}
+
+function cms_auth_password(string $password, array $account): bool
+{
+    $calc = hash_pbkdf2('sha256', $password, (string) hex2bin($account['salt']), 100000, 64);
+    return hash_equals($account['password_hash'], $calc);
+}
+
+function cms_write_auth(array $account): bool
+{
+    $json = json_encode([
+        'username' => $account['username'],
+        'salt' => $account['salt'],
+        'password_hash' => $account['password_hash'],
+    ], JSON_UNESCAPED_SLASHES);
+    return $json !== false && file_put_contents(CMS_AUTH, $json . "\n", LOCK_EX) !== false;
+}
+
 function cms_username(): string
 {
     $config = cms_config();
-    if (!is_array($config)) {
-        return '';
+    $fromConfig = is_array($config) ? cms_clean_username((string) ($config['username'] ?? '')) : '';
+    if ($fromConfig !== '') {
+        return $fromConfig;
     }
-    return cms_clean_username((string) ($config['username'] ?? ''));
+    $account = cms_auth_account();
+    return $account['username'] ?? '';
 }
 
 function cms_write_config(array $config): bool
