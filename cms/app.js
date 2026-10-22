@@ -219,6 +219,7 @@
       '<div class="page-head"><div><a class="text-link" href="./">← Svi članci</a><h1>' + (isNew ? "Novi članak" : "Izmena članka") + "</h1></div>" +
       '<div class="form-actions"><a class="button ghost" href="./">Otkaži</a><button class="primary" type="submit">Objavi</button></div></div>' +
       '<p class="error" id="form-error" hidden></p>' +
+      (!php && !isLocalPreview() ? '<label class="card">GitHub token za objavu<input id="token" type="password" autocomplete="off" value="' + esc(sessionStorage.getItem("tka-cms-token") || "") + '"><span class="hint">Na ovom domenu se članak upisuje u repozitorijum. Token ostaje samo u ovom pregledaču.</span></label>' : "") +
       '<div class="editor"><div class="fields">' +
       '<section class="card panel"><h2>Naslov i opis</h2><div class="grid">' +
       field("Naslov (srpski)", "title_sr", post.title_sr, true) +
@@ -503,14 +504,26 @@
       .replace(/--page-hero-image:\s*url\((['"]?)[^)'"]+\1\)/, "--page-hero-image: url('" + esc("../" + post.image) + "')");
   }
 
+  function isLocalPreview() {
+    return location.hostname === "127.0.0.1" || location.hostname === "localhost";
+  }
+
+  function cmsDirectory() {
+    var path = location.pathname;
+    if (path.endsWith("/index.html")) path = path.slice(0, -"index.html".length);
+    if (!path.endsWith("/")) path += "/";
+    return location.origin + path;
+  }
+
   async function writeLocal(files, deletions) {
+    if (!isLocalPreview()) return false;
     try {
-      var response = await fetch("save", {
+      var response = await fetch(cmsDirectory() + "save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ files: files, delete: deletions })
       });
-      return response.ok;
+      return response.status === 204;
     } catch (error) {
       return false;
     }
@@ -574,8 +587,10 @@
     }
     if (await writeLocal(files, deletions)) return;
 
-    var token = sessionStorage.getItem("tka-cms-token") || "";
-    if (!token) throw new Error("Članak nije sačuvan.");
+    var tokenInput = document.getElementById("token");
+    var token = (tokenInput && tokenInput.value.trim()) || sessionStorage.getItem("tka-cms-token") || "";
+    if (!token) throw new Error("Članak nije sačuvan na ovom sajtu.");
+    sessionStorage.setItem("tka-cms-token", token);
     var siteResponse = await fetch("site.json");
     if (!siteResponse.ok) throw new Error("Repozitorijum nije podešen.");
     var site = await siteResponse.json();
