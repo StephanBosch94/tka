@@ -102,17 +102,6 @@
     var file = await fetchAccount("auth.json", { cache: "no-store" });
     if (file) return file;
     try {
-      var siteResponse = await fetch("site.json", { cache: "no-store" });
-      if (siteResponse.ok) {
-        var site = await siteResponse.json();
-        var remote = await fetchAccount("https://api.github.com/repos/" + site.owner + "/" + site.repo + "/contents/cms/auth.json?ref=" + encodeURIComponent(site.branch), {
-          headers: { Accept: "application/vnd.github.raw", "X-GitHub-Api-Version": "2022-11-28" },
-          signal: AbortSignal.timeout(4000)
-        });
-        if (remote) return remote;
-      }
-    } catch (error) {}
-    try {
       return normalizeAccount(JSON.parse(localStorage.getItem("tka-cms-account") || "null"));
     } catch (error) {
       return null;
@@ -496,12 +485,38 @@
     return text.replace(pattern, start + "\n" + html + "\n          " + end);
   }
 
+  async function readSiteFile(path) {
+    var response = await fetch("../" + path, { cache: "no-store" });
+    if (!response.ok) return "";
+    return response.text();
+  }
+
+  function updatedArticle(current, post) {
+    if (!current) return articleHtml(post);
+    return fill(fill(fill(fill(fill(fill(current,
+      /<title>[\s\S]*?<\/title>/, "<title>" + esc(post.title_sr) + " – TKA</title>"),
+      /<meta name="description" content="[^"]*"/, '<meta name="description" content="' + esc(post.excerpt_sr) + '"'),
+      /<h1 class="hero-title">[\s\S]*?<\/h1>/, '<h1 class="hero-title">' + esc(post.title_sr) + "</h1>"),
+      /<p class="hero-lead">[\s\S]*?<\/p>/, '<p class="hero-lead">' + esc(post.lead_sr || post.excerpt_sr) + "</p>"),
+      /<time datetime="[^"]*">[\s\S]*?<\/time>/, '<time datetime="' + esc(post.date) + '">' + esc(dateLabel(post.date)) + "</time>"),
+      /<div class="prose">[\s\S]*?<\/div>/, '<div class="prose">\n' + post.body_sr + "\n</div>")
+      .replace(/--page-hero-image:\s*url\((['"]?)[^)'"]+\1\)/, "--page-hero-image: url('" + esc("../" + post.image) + "')");
+  }
+
+  async function writeLocal(files, deletions) {
+    try {
+      var response = await fetch("save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ files: files, delete: deletions })
+      });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async function publishStatic(formData, deleteSlug) {
-    var token = sessionStorage.getItem("tka-cms-token") || "";
-    if (!token) throw new Error("Članak nije objavljen.");
-    var siteResponse = await fetch("site.json");
-    if (!siteResponse.ok) throw new Error("Repozitorijum nije podešen.");
-    var site = await siteResponse.json();
     var next = posts.slice();
     var remove = null;
     var savedPost = null;
@@ -532,16 +547,16 @@
     }
 
     next.sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
-    var tree = [];
-    tree.push({ path: "content/posts.json", mode: "100644", type: "blob", sha: await githubBlob(site, token, JSON.stringify(next, null, 2) + "\n", "utf-8") });
+    var files = [{ path: "content/posts.json", content: JSON.stringify(next, null, 2) + "\n" }];
+    var deletions = [];
     if (savedPost) {
-      var page = await articleFor(site, token, savedPost);
-      tree.push({ path: savedPost.slug + "/index.html", mode: "100644", type: "blob", sha: await githubBlob(site, token, page, "utf-8") });
+      var hadPage = posts.some(function (item) { return item.slug === savedPost.slug; });
+      var currentPage = hadPage ? await readSiteFile(savedPost.slug + "/index.html") : "";
+      files.push({ path: savedPost.slug + "/index.html", content: updatedArticle(currentPage, savedPost) });
     }
-    if (remove) tree.push({ path: remove + "/index.html", mode: "100644", type: "blob", sha: null });
+    if (remove) deletions.push(remove + "/index.html");
     if (imageFile && imageFile.size && imagePath) {
-      var bytes = await fileBase64(imageFile);
-      tree.push({ path: imagePath, mode: "100644", type: "blob", sha: await githubBlob(site, token, bytes, "base64") });
+      files.push({ path: imagePath, content: await fileBase64(imageFile), encoding: "base64" });
     }
     var grids = [
       ["index.html", "", "sr", 3],
@@ -550,12 +565,33 @@
       ["en/blog-2/index.html", "../../", "en", null]
     ];
     for (var g = 0; g < grids.length; g++) {
-      var current = await githubFile(site, token, grids[g][0]);
-      var cards = (grids[g][3] ? next.slice(0, grids[g][3]) : next).map(function (post) {
-        return cardHtml(post, grids[g][1], grids[g][2]);
+      var current = await readSiteFile(grids[g][0]);
+      if (!current) throw new Error("Blog lista nije pronađena.");
+      var cards = (grids[g][3] ? next.slice(0, grids[g][3]) : next).map(function (item) {
+        return cardHtml(item, grids[g][1], grids[g][2]);
       }).join("\n");
-      tree.push({ path: grids[g][0], mode: "100644", type: "blob", sha: await githubBlob(site, token, replaceGrid(current, cards), "utf-8") });
+      files.push({ path: grids[g][0], content: replaceGrid(current, cards) });
     }
+    if (await writeLocal(files, deletions)) return;
+
+    var token = sessionStorage.getItem("tka-cms-token") || "";
+    if (!token) throw new Error("Članak nije sačuvan.");
+    var siteResponse = await fetch("site.json");
+    if (!siteResponse.ok) throw new Error("Repozitorijum nije podešen.");
+    var site = await siteResponse.json();
+    var tree = [];
+    for (var f = 0; f < files.length; f++) {
+      var file = files[f];
+      tree.push({
+        path: file.path,
+        mode: "100644",
+        type: "blob",
+        sha: await githubBlob(site, token, file.content, file.encoding === "base64" ? "base64" : "utf-8")
+      });
+    }
+    deletions.forEach(function (path) {
+      tree.push({ path: path, mode: "100644", type: "blob", sha: null });
+    });
     await githubCommit(site, token, tree, deleteSlug ? "Obriši članak iz CMS-a." : "Objavi članak iz CMS-a.");
   }
 
