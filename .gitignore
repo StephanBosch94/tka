@@ -4,6 +4,8 @@
 .vscode/
 .idea/
 node_modules/
+studio/dist/
+studio/.sanity/
 .env
 .env.*
 cms/config.php

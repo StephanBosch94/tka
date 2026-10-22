@@ -1,10 +1,11 @@
 (function () {
   var grid = document.querySelector(".blog-grid[data-posts]");
-  if (!grid) return;
+  if (!grid || !window.tkaSanity) return;
 
   var postsUrl = grid.getAttribute("data-posts");
   var lang = grid.getAttribute("data-lang") || "sr";
   var prefix = grid.getAttribute("data-prefix") || "";
+  var articleBase = grid.getAttribute("data-article") || "";
   var limitValue = grid.getAttribute("data-limit");
   var limit = limitValue ? Number(limitValue) : null;
   var months = ["januar", "februar", "mart", "april", "maj", "jun", "jul", "avgust", "septembar", "oktobar", "novembar", "decembar"];
@@ -23,23 +24,29 @@
     return month + " " + Number(parts[2]) + ", " + parts[0];
   }
 
-  fetch(postsUrl)
-    .then(function (response) {
-      if (!response.ok) throw new Error("posts");
-      return response.json();
-    })
-    .then(function (posts) {
-      if (!Array.isArray(posts)) return;
+  function hrefFor(post, source) {
+    if (source === "sanity" && articleBase) return articleBase + "?slug=" + encodeURIComponent(post.slug);
+    return prefix + post.slug + "/";
+  }
+
+  function imageSrc(post) {
+    if (/^https?:\/\//.test(post.image || "")) return post.image;
+    return prefix + (post.image || "");
+  }
+
+  window.tkaSanity.loadPosts(postsUrl)
+    .then(function (result) {
+      var posts = result.posts || [];
       var shown = limit ? posts.slice(0, limit) : posts;
       var more = lang === "en" ? "Read more" : "Dalje";
       grid.innerHTML = shown.map(function (post) {
         var title = (lang === "en" ? post.title_en : post.title_sr) || post.title_sr || "";
         var excerpt = (lang === "en" ? post.excerpt_en : post.excerpt_sr) || post.excerpt_sr || "";
-        var href = prefix + post.slug + "/";
+        var href = hrefFor(post, result.source);
         return (
           '<article class="blog-card">' +
             '<a href="' + esc(href) + '" class="blog-card-media">' +
-              '<img src="' + esc(prefix + post.image) + '" alt="' + esc(title) + '" width="1000" height="750" loading="lazy">' +
+              '<img src="' + esc(imageSrc(post)) + '" alt="' + esc(title) + '" width="1000" height="750" loading="lazy">' +
             "</a>" +
             '<div class="blog-card-body">' +
               '<time datetime="' + esc(post.date) + '">' + esc(label(post.date)) + "</time>" +

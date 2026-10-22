@@ -1,0 +1,17 @@
+{
+  "name": "tka-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "deploy": "sanity deploy",
+    "import-posts": "sanity exec scripts/import-posts.js --with-user-token"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.27.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^4.22.1",
+    "styled-components": "^6.6.0"
+  }
+}

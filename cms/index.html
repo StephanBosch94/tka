@@ -19,13 +19,28 @@
   </a>
   <nav class="top-links" aria-label="CMS">
     <a class="text-link" href="../blog/">Pogledaj blog</a>
-    <a class="text-link" id="logout" href="index.php?action=logout" hidden>Odjava</a>
   </nav>
 </header>
-<main class="wrap" id="app">
-  <p class="muted">Učitavanje…</p>
+<main class="wrap">
+  <div class="page-head">
+    <div>
+      <h1>Članci</h1>
+      <p class="muted">Tekst se uređuje u Sanity. Objavljena izmena se vidi na sajtu, na svakom domenu.</p>
+    </div>
+  </div>
+  <div class="card stack" id="panel">
+    <p class="muted">Učitavanje…</p>
+  </div>
 </main>
-<script src="hash.js?v=20261021e"></script>
-<script src="app.js?v=20261022b"></script>
+<script src="../js/sanity.config.js?v=20261022c"></script>
+<script>
+  var cfg = window.TKA_SANITY || {};
+  var panel = document.getElementById("panel");
+  if (cfg.projectId && cfg.studioUrl) {
+    panel.innerHTML = '<a class="button" href="' + cfg.studioUrl + '">Otvori urednik</a>';
+  } else {
+    panel.innerHTML = '<p>Nalog na Sanity još nije povezan sa sajtom.</p><a class="button" href="https://www.sanity.io/manage">Otvori Sanity</a>';
+  }
+</script>
 </body>
 </html>
